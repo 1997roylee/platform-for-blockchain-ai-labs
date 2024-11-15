@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from pathlib import Path
 
 project_root = Path(__file__).parent.absolute()
-env_path = '/Users/johnku/Desktop/Data addict/4. Coding/Coinbase CDP Agent Trial/.env'
+env_path = '/Users/johnku/Desktop/Data addict/4. Coding/platform-for-blockchain-ai-labs/packages/cdp-agent-api/.env'
 
 # Load .env with explicit path
 load_dotenv(dotenv_path=env_path)
@@ -25,11 +25,48 @@ from cdp_langchain.utils import CdpAgentkitWrapper
 from cdp_langchain.tools import CdpTool
 from pydantic import BaseModel, Field
 
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+
+app = FastAPI()
+
+class UserInput(BaseModel):
+    message: str
+
+@app.on_event("startup")
+async def startup_event():
+    global agent_executor, config
+    agent_executor, config = initialize_agent()
+
+@app.post("/chat/")
+async def chat(user_input: UserInput):
+    try:
+        response = []
+        for chunk in agent_executor.stream(
+            {"messages": [HumanMessage(content=user_input.message)]}, config):
+            if "agent" in chunk:
+                response.append(chunk["agent"]["messages"][0].content)
+            elif "tools" in chunk:
+                response.append(chunk["tools"]["messages"][0].content)
+        return {"response": response}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/autonomous/")
+async def autonomous(interval: int = 10):
+    try:
+        run_autonomous_mode(agent_executor=agent_executor, config=config, interval=interval)
+        return {"status": "Autonomous mode started"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 # Configure a file to persist the agent's CDP MPC Wallet Data.
 wallet_data_file = "wallet_data.txt"
 
+# For testing
+
 # Configure a file to persist the agent's CDP MPC Wallet Data.
-wallet_data_file = os.getenv("WALLET_DATA_FILE", "wallet_data.txt")
+# wallet_data_file = os.getenv("WALLET_DATA_FILE", "wallet_data.txt")
 
 # def clean_private_key(key: str) -> str:
 #     if not key:
@@ -157,5 +194,5 @@ def main():
 
 
 if __name__ == "__main__":
-    print("Starting Agent...")
-    main()
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)

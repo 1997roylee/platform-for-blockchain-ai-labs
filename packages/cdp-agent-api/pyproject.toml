@@ -13,7 +13,8 @@ cdp-sdk = "*"
 cdp-langchain = "*"
 python-dotenv = "*"
 pydantic = "*"
-
+fastapi = "*"
+uvicorn = "*"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
