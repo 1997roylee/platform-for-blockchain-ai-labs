@@ -1,0 +1,33 @@
+{
+  "name": "contracts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "deploy:localhost": "npx hardhat ignition deploy ignition/modules/BotFactory.ts --network localhost",
+    "deploy:base": "npx hardhat ignition deploy ignition/modules/BotFactory.ts --network baseSepolia",
+    "typechain": "npx hardhat typechain",
+    "create:bot": "npx hardhat run ./scripts/create-bot.ts",
+    "generate:types": "npx hardhat typechain",
+    "generate:account": "tsx ./scripts/generate-account.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-chai-matchers": "^2.0.8",
+    "@nomicfoundation/hardhat-ignition": "^0.15.7",
+    "@nomicfoundation/hardhat-toolbox-viem": "^3.0.0",
+    "@typechain/ethers-v6": "^0.5.1",
+    "@typechain/hardhat": "^9.1.0",
+    "hardhat": "^2.22.15",
+    "tsx": "^4.19.2",
+    "typechain": "^8.3.2"
+  },
+  "dependencies": {
+    "@nomicfoundation/hardhat-ignition-ethers": "^0.15.7",
+    "@nomicfoundation/hardhat-ignition-viem": "^0.15.7",
+    "@openzeppelin/contracts": "^5.1.0",
+    "ethers": "^6.13.4"
+  }
+}
