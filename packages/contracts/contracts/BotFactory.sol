@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "./BotRegistry.sol";
 
 contract BotFactory is Ownable {
-    address[] public registries;
+    address[] registries;
 
     event RegistryCreated(address indexed registry, address indexed creator);
     event RegistryRemoved(address indexed registry);
@@ -31,7 +31,7 @@ contract BotFactory is Ownable {
         return address(newRegistry);
     }
 
-    function getRegistries() external view returns (address[] memory) {
+    function getRegistries() public view returns (address[] memory) {
         return registries;
     }
 
