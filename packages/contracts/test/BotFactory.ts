@@ -11,8 +11,9 @@ describe("BotFactory", function () {
 
   const mockBot = {
     name: "TestBot",
-    apiInfo: "https://api.test.com",
-    version: BigInt(1),
+    apiEndpoint: "http://localhost:3000/api/bot",
+    icon: "https://qph.cf2.poecdn.net/main-thumb-pb-3002-200-vcmrcgoloaktppabmdfsgeczaixswmxt.jpeg",
+    // version: BigInt(1),
     fee: ethers.parseEther("0.01"),
   };
 
@@ -45,8 +46,8 @@ describe("BotFactory", function () {
     it("Should create a new registry", async function () {
       const tx = await botFactory.createRegistry(
         mockBot.name,
-        mockBot.apiInfo,
-        mockBot.version,
+        mockBot.icon,
+        mockBot.apiEndpoint,
         mockBot.fee
       );
 
@@ -80,8 +81,8 @@ describe("BotFactory", function () {
     it("Should track created registries", async function () {
       await botFactory.createRegistry(
         mockBot.name,
-        mockBot.apiInfo,
-        mockBot.version,
+        mockBot.icon,
+        mockBot.apiEndpoint,
         mockBot.fee
       );
 
@@ -92,8 +93,8 @@ describe("BotFactory", function () {
     it("Should create registry with correct parameters", async function () {
       const tx = await botFactory.createRegistry(
         mockBot.name,
-        mockBot.apiInfo,
-        mockBot.version,
+        mockBot.icon,
+        mockBot.apiEndpoint,
         mockBot.fee
       );
 
@@ -110,8 +111,8 @@ describe("BotFactory", function () {
 
       const metadata = await registry.metadata();
       expect(metadata.name).to.equal(mockBot.name);
-      expect(metadata.apiInfo).to.equal(mockBot.apiInfo);
-      expect(metadata.version).to.equal(mockBot.version);
+      expect(metadata.icon).to.equal(mockBot.icon);
+      expect(metadata.apiEndpoint).to.equal(mockBot.apiEndpoint);
       expect(metadata.fee).to.equal(mockBot.fee);
       expect(metadata.creator).to.equal(owner.address);
     });

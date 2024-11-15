@@ -3,21 +3,13 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
-// interface IBotMetadata {
-//     function validateMetadata(
-//         string memory name,
-//         string memory apiInfo,
-//         uint8 version
-//     ) external pure returns (bool);
-// }
-
 contract BotRegistry is Ownable, ReentrancyGuard {
     struct Metadata {
         string name;
-        address creator;
-        string apiInfo;
-        uint256 version;
+        string icon;
+        string apiEndpoint;
         uint256 fee;
+        address creator;
     }
 
     Metadata public metadata;
@@ -42,14 +34,14 @@ contract BotRegistry is Ownable, ReentrancyGuard {
 
     constructor(
         string memory _name,
-        string memory _apiInfo,
-        uint256 _version,
+        string memory _icon,
+        string memory _apiEndpoint,
         uint256 _fee,
         address _creator
     ) Ownable(_creator) {
         require(_fee > 0, "Fee must be positive");
 
-        metadata = Metadata(_name, _creator, _apiInfo, _version, _fee);
+        metadata = Metadata(_name, _icon, _apiEndpoint, _fee, _creator);
     }
 
     function subscribe(uint256 botId) external payable nonReentrant {
@@ -84,19 +76,19 @@ contract BotRegistry is Ownable, ReentrancyGuard {
         _;
     }
 
-    function updateMetadata(
-        string memory _name,
-        string memory _apiInfo,
-        uint8 _version,
-        uint256 _fee
-    ) external onlyCreator {
-        require(_fee > 0, "Fee must be positive");
+    // function updateMetadata(
+    //     string memory _name,
+    //     string memory _apiInfo,
+    //     uint8 _version,
+    //     uint256 _fee
+    // ) external onlyCreator {
+    //     require(_fee > 0, "Fee must be positive");
 
-        metadata.name = _name;
-        metadata.apiInfo = _apiInfo;
-        metadata.version = _version;
-        metadata.fee = _fee;
+    //     metadata.name = _name;
+    //     metadata.apiInfo = _apiInfo;
+    //     metadata.version = _version;
+    //     metadata.fee = _fee;
 
-        emit MetadataUpdated(_name, _apiInfo, _version, _fee);
-    }
+    //     emit MetadataUpdated(_name, _apiInfo, _version, _fee);
+    // }
 }
