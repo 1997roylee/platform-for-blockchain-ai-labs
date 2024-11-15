@@ -9,7 +9,9 @@
     "typechain": "npx hardhat typechain",
     "create:bot": "npx hardhat run ./scripts/create-bot.ts",
     "generate:types": "npx hardhat typechain",
-    "generate:account": "tsx ./scripts/generate-account.ts"
+    "generate:account": "tsx ./scripts/generate-account.ts",
+    "test": "npx hardhat test",
+    "format": "prettier --write \"contracts/**/*.sol\""
   },
   "keywords": [],
   "author": "",
@@ -17,16 +19,17 @@
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.8",
     "@nomicfoundation/hardhat-ignition": "^0.15.7",
-    "@nomicfoundation/hardhat-toolbox-viem": "^3.0.0",
     "@typechain/ethers-v6": "^0.5.1",
     "@typechain/hardhat": "^9.1.0",
     "hardhat": "^2.22.15",
+    "prettier": "^3.3.3",
+    "prettier-plugin-solidity": "^1.4.1",
     "tsx": "^4.19.2",
     "typechain": "^8.3.2"
   },
   "dependencies": {
+    "@nomicfoundation/hardhat-ethers": "^3.0.8",
     "@nomicfoundation/hardhat-ignition-ethers": "^0.15.7",
-    "@nomicfoundation/hardhat-ignition-viem": "^0.15.7",
     "@openzeppelin/contracts": "^5.1.0",
     "ethers": "^6.13.4"
   }

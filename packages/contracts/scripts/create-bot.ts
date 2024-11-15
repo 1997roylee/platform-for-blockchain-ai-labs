@@ -17,8 +17,8 @@ async function main() {
   const receipt = await tx.wait();
   console.log(receipt);
 
-  // const registries = await botFactory.getRegistries();
-  // console.log(registries);
+  const registries = await botFactory.getRegistries();
+  console.log(registries);
 }
 
 main()

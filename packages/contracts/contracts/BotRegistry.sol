@@ -16,7 +16,7 @@ contract BotRegistry is Ownable, ReentrancyGuard {
         string name;
         address creator;
         string apiInfo;
-        uint8 version;
+        uint256 version;
         uint256 fee;
     }
 
@@ -31,7 +31,7 @@ contract BotRegistry is Ownable, ReentrancyGuard {
     event MetadataUpdated(
         string name,
         string apiInfo,
-        uint8 version,
+        uint256 version,
         uint256 fee
     );
     event SubscriptionAdded(uint256 indexed botId, address indexed subscriber);
@@ -43,13 +43,13 @@ contract BotRegistry is Ownable, ReentrancyGuard {
     constructor(
         string memory _name,
         string memory _apiInfo,
-        uint8 _version,
+        uint256 _version,
         uint256 _fee,
         address _creator
     ) Ownable(_creator) {
         require(_fee > 0, "Fee must be positive");
 
-        metadata = Metadata(_name, msg.sender, _apiInfo, _version, _fee);
+        metadata = Metadata(_name, _creator, _apiInfo, _version, _fee);
     }
 
     function subscribe(uint256 botId) external payable nonReentrant {

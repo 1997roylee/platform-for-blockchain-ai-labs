@@ -15,7 +15,7 @@ contract BotFactory is Ownable {
     function createRegistry(
         string memory name,
         string memory apiInfo,
-        uint8 version,
+        uint256 version,
         uint256 fee
     ) external onlyOwner returns (address) {
         BotRegistry newRegistry = new BotRegistry(
