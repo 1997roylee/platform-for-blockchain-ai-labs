@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "deploy:localhost": "npx hardhat run scripts/deploy.ts --network localhost",
-    "deploy:base": "npx hardhat ignition deploy ignition/modules/BotFactory.ts --network baseSepolia",
+    "deploy:base": "npx hardhat run scripts/deploy.ts --network baseSepolia",
     "create:bot": "npx hardhat run ./scripts/create-bot.ts --network localhost",
     "generate:types": "npx hardhat typechain",
     "generate:account": "tsx ./scripts/generate-account.ts",

@@ -22,10 +22,14 @@ contract BotRegistry is Ownable, ReentrancyGuard {
     uint256 public constant CREDITS_PER_MONTH = 30;
     uint256 public constant MIN_STAKE_AMOUNT = 0.01 ether;
     uint256 public constant SECONDS_PER_MONTH = 30 days;
+    // uint256 public constant CREDIT_PRICE = 0.0001 ether; // 0.0001 ETH per credit
+
+    uint256 private totalSubscribers = 0;
 
     event SubscriptionAdded(address indexed subscriber, uint256 credits);
     event SubscriptionRemoved(address indexed subscriber);
     event CreditsRecalculated(address indexed user, uint256 newCredits);
+    event CreditsPurchased(address indexed user, uint256 amount, uint256 cost);
 
     constructor(
         string memory _name,
@@ -55,18 +59,37 @@ contract BotRegistry is Ownable, ReentrancyGuard {
         _;
     }
 
+    // function buyCredits(uint256 creditAmount) external payable {
+    //     require(creditAmount > 0, "Must buy at least 1 credit");
+    //     uint256 cost = creditAmount * CREDIT_PRICE;
+    //     require(msg.value >= cost, "Insufficient payment");
+
+    //     // Update credits
+    //     userCredits[msg.sender] += creditAmount;
+
+    //     // Refund excess payment if any
+    //     uint256 excess = msg.value - cost;
+    //     if (excess > 0) {
+    //         (bool success, ) = msg.sender.call{value: excess}("");
+    //         require(success, "Refund failed");
+    //     }
+
+    //     emit CreditsPurchased(msg.sender, creditAmount, cost);
+    // }
+
     // Add staking function
     function subscribe() external payable {
         require(
             msg.value >= MIN_STAKE_AMOUNT,
-            "Minimum stake required: 0.1 ETH"
+            "Minimum stake required: 0.01 ETH"
         );
         require(!subscribers[msg.sender], "Already subscribed");
 
         subscribers[msg.sender] = true;
+        totalSubscribers++;
         stakingBalance[msg.sender] += msg.value;
         userCredits[msg.sender] += CREDITS_PER_MONTH;
-        // lastRewardTime[msg.sender] = block.timestamp;
+
         emit SubscriptionAdded(msg.sender, CREDITS_PER_MONTH);
     }
 
@@ -77,6 +100,7 @@ contract BotRegistry is Ownable, ReentrancyGuard {
         require(amount > 0, "No staking balance");
 
         subscribers[msg.sender] = false;
+        totalSubscribers--;
         stakingBalance[msg.sender] = 0;
         (bool success, ) = msg.sender.call{value: amount}("");
         require(success, "Transfer failed");
@@ -118,6 +142,10 @@ contract BotRegistry is Ownable, ReentrancyGuard {
     // Add credit balance check
     function getCreditsBalance(address user) external view returns (uint256) {
         return userCredits[user];
+    }
+
+    function getTotalSubscribers() external view returns (uint256) {
+        return totalSubscribers;
     }
     // function updateMetadata(
     //     string memory _name,
