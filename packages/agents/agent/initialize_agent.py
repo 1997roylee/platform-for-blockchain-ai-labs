@@ -51,7 +51,7 @@ def initialize_agent(wallet_id: str, action_klass = None):
 
     wallet_data = None
 
-    wallet_data_file = "wallets/{}.json".format(wallet_id)
+    wallet_data_file = "./wallets/{}.json".format(wallet_id)
     if os.path.exists(wallet_data_file):
         with open(wallet_data_file) as f:
             wallet_data = f.read()

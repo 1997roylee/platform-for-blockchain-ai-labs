@@ -1,9 +1,11 @@
 from .one_inch import CheckPriceAction
 from .blockscout import CheckTokenDetailAction
+from .uniswap import CreateSwapAction
 
 action_lists = {
     "1inch": CheckPriceAction,
-    "trade": CheckTokenDetailAction
+    "trade": CheckTokenDetailAction,
+    "uniswap": CreateSwapAction,
 }
 
 

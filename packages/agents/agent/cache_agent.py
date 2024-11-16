@@ -40,9 +40,9 @@ agent_cache_instance = AgentCache()
 def initialize_agent_with_cache(wallet_id: str = None, agent_id: str = None, action_klass=None):
     """Initialize agent with caching support"""
 
-    # cached_agent = agent_cache_instance.get_agent(wallet_id, agent_id)
-    # if cached_agent is not None:
-    #     return cached_agent
+    cached_agent = agent_cache_instance.get_agent(wallet_id, agent_id)
+    if cached_agent is not None:
+        return cached_agent
 
     # Initialize new agent if not in cache
     agent = initialize_agent(wallet_id, action_klass)
