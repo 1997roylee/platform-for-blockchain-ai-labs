@@ -6,7 +6,7 @@ export type BotsListProps = {
 };
 export default function BotsList({ data }: BotsListProps) {
   return (
-    <div className="grid grid-cols-3 gap-3">
+    <div className="grid md:grid-cols-4 sm:grid-cols-3 gap-3">
       {data.map((address) => {
         return <BotItem address={address} key={address} />;
       })}

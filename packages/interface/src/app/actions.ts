@@ -12,7 +12,7 @@ export async function createWallet() {
 
   try {
     const wallet = await Wallet.create({
-        networkId: Coinbase.networks.BaseMainnet
+      networkId: Coinbase.networks.BaseMainnet,
     });
     console.log(`Wallet successfully created: `, wallet.toString());
   } catch (error) {

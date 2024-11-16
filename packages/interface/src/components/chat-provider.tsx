@@ -6,7 +6,7 @@ import { ChatStore, createChatStore } from "@/stores/chat";
 
 export const ChatContext = createContext<StoreApi<ChatStore> | null>(null);
 
-export default function BotProvider({ children }: PropsWithChildren) {
+export default function ChatProvider({ children }: PropsWithChildren) {
   const [store] = useState(() => createChatStore());
   return <ChatContext.Provider value={store}>{children}</ChatContext.Provider>;
 }

@@ -40,7 +40,7 @@ const abi = [
 ] as const;
 
 export default function useBotMetadata(address: Address) {
-  const {data, ...rest} = useReadContract({
+  const { data, ...rest } = useReadContract({
     abi,
     address,
     functionName: "metadata",
@@ -56,9 +56,9 @@ export default function useBotMetadata(address: Address) {
       fee: data?.[3],
       creator: data?.[4],
     };
-  }, [data])
+  }, [data]);
   return {
     data: formattedData,
-    ...rest
-  }
+    ...rest,
+  };
 }

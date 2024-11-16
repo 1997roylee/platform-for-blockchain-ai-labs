@@ -11,7 +11,7 @@ import { SessionProvider } from "next-auth/react";
 export default function Providers(
   props: {
     initialState?: State;
-  } & PropsWithChildren
+  } & PropsWithChildren,
 ) {
   const [config] = useState(() => getConfig());
   const [queryClient] = useState(() => new QueryClient());
@@ -19,9 +19,7 @@ export default function Providers(
   return (
     <WagmiProvider config={config} initialState={props.initialState}>
       <QueryClientProvider client={queryClient}>
-       <SessionProvider>
-       {props.children}
-        </SessionProvider>
+        <SessionProvider>{props.children}</SessionProvider>
         {/* <OnchainKitProvider chain={base}>{props.children}</OnchainKitProvider> */}
       </QueryClientProvider>
     </WagmiProvider>

@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "db:migrate": "pnpm exec prisma migrate dev",
-    "db:generate": "pnpm exec prisma generate"
+    "db:generate": "pnpm exec prisma generate",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.3",
@@ -23,6 +24,7 @@
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.4",
     "@tanstack/react-query": "^5.60.2",
+    "boring-avatars": "^1.11.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.456.0",

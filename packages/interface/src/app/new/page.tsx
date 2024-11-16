@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { FACTORY_ADDRESS } from "@/constants/addresses";
 import {
-    useConfig,
+  useConfig,
   usePublicClient,
   useWaitForTransactionReceipt,
   useWriteContract,

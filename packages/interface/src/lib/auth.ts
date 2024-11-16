@@ -1,28 +1,26 @@
-import NextAuth, { DefaultSession } from "next-auth"
-import { PrismaAdapter } from "@auth/prisma-adapter"
-import { prisma } from "@/lib/prisma"
-import type { Provider } from "next-auth/providers"
+import NextAuth from "next-auth";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import { prisma } from "@/lib/prisma";
+import type { Provider } from "next-auth/providers";
 // import Credentials from "next-auth/providers/credentials"
-import Google from 'next-auth/providers/google';
+import Google from "next-auth/providers/google";
 import type { Adapter, AdapterUser } from "next-auth/adapters";
 import { createWallet } from "./server/coinbase";
 import { encryptSeed } from "./crypto";
-const providers: Provider[] = [
-  Google
-]
- 
+const providers: Provider[] = [Google];
+
 export const createUser = async ({ ...data }: AdapterUser) => {
-  console.log(data)
-  const wallet = await createWallet()
+  console.log(data);
+  const wallet = await createWallet();
 
   if (!wallet) {
     throw new Error("Failed to create wallet");
   }
 
-  console.log("id", wallet.getId())
-
   // const defaultAddress = await wallet.getDefaultAddress();
   const walletId = wallet.getId();
+
+  if (!walletId) throw new Error("Failed to get wallet id");
   const walletData = await wallet.export();
 
   const user = await prisma.user.create({
@@ -30,11 +28,10 @@ export const createUser = async ({ ...data }: AdapterUser) => {
       ...data,
       wallets: {
         create: {
-          // id: walletId,
           walletId: walletId,
           encryptedSeed: encryptSeed(walletData.seed),
         },
-      }
+      },
     },
   });
 
@@ -84,5 +81,5 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
       return token;
     },
-  }
-})
+  },
+});

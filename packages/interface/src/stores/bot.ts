@@ -1,18 +1,15 @@
-import { createStore } from 'zustand';
-
+import { createStore } from "zustand";
 
 export interface BotStore {
-    bot: {};
-    setBot: (bot: {}) => void
+  bot: {};
+  setBot: (bot: {}) => void;
 }
 
-export function craeteBotStore(){
-    return createStore<BotStore>((set) => ({
-        
-            bot: {},
-            setBot: (bot) => {
-                set({bot})
-            }
-        
-    }))
+export function craeteBotStore() {
+  return createStore<BotStore>((set) => ({
+    bot: {},
+    setBot: (bot) => {
+      set({ bot });
+    },
+  }));
 }

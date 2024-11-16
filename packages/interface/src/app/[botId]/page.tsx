@@ -1,3 +1,4 @@
+import ChatProvider from "@/components/chat-provider";
 import BotChat from "./components/bot-chat";
 import BotHeader from "./components/bot-header";
 import BotSendForm from "./components/bot-send-form";
@@ -10,15 +11,17 @@ export default function Page({
 }) {
   console.log("botId", botId);
   return (
-    <BotWrapper botId={botId}>
-      <div className="flex flex-col flex-1">
-        <BotHeader />
-        <BotChat/>
-        {/* <div className="flex-1 flex-grow"></div> */}
-        <div className="pb-10">
-          <BotSendForm />
+    <ChatProvider>
+      <BotWrapper botId={botId}>
+        <div className="flex flex-col flex-1">
+          <BotHeader />
+          <BotChat />
+          {/* <div className="flex-1 flex-grow"></div> */}
+          <div className="pb-10">
+            <BotSendForm />
+          </div>
         </div>
-      </div>
-    </BotWrapper>
+      </BotWrapper>
+    </ChatProvider>
   );
 }

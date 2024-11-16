@@ -9,6 +9,7 @@ export type Message = {
 export interface ChatStore {
   messages: Message[];
   setMessages: (messages: Message[]) => void;
+  addMessage: (message: Message) => void;
 }
 
 export function createChatStore() {
@@ -16,6 +17,9 @@ export function createChatStore() {
     messages: [],
     setMessages: (messages) => {
       set({ messages });
+    },
+    addMessage: (message) => {
+      set((state) => ({ messages: [...state.messages, message] }));
     },
   }));
 }

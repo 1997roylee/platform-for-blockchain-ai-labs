@@ -8,12 +8,21 @@ export default function Home() {
 
   console.log("botList", botList);
   return (
-    <div className='container mx-auto'>
-      <div className="flex flex-col gap-3">
-        <div>AI X Crypto</div>
-        <SearchBar />
-        <BotsList data={botList ?? []} />
-        {/* <BotsList /> */}
+    <div className="">
+      <div className="flex flex-col gap-12">
+        <div className="flex-col container gap-6 mx-auto max-w-4xl">
+          <div className="mt-10 ">
+            <div className="font-medium text-2xl text-center py-6">
+              AI X Crypto
+            </div>
+          </div>
+          <SearchBar />
+        </div>
+
+        <div className="container mx-auto">
+          <div>Official bots</div>
+          <BotsList data={botList ?? []} />
+        </div>
       </div>
 
       {/* <Button onClick={handleCreateWallet}>Create wallet</Button> */}

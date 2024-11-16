@@ -12,9 +12,9 @@ Coinbase.configure({
 export async function createWallet() {
   try {
     const wallet = await Wallet.create({
-        networkId: Coinbase.networks.BaseMainnet
+      networkId: Coinbase.networks.BaseSepolia,
     });
-    console.log(`Wallet successfully created: `, wallet.toString());
+    // console.log(`Wallet successfully created: `, wallet.toString());
     return wallet;
   } catch (error) {
     console.error(error);
