@@ -6,7 +6,7 @@ import { buildModule } from "@nomicfoundation/hardhat-ignition/modules";
 const mockBot = {
   name: "TestBot",
   description: "A test bot",
-  apiEndpoint: "http://localhost:3000/api/bot",
+  apiEndpoint: "http://0.0.0.0:8000/chat",
   icon: "https://qph.cf2.poecdn.net/main-thumb-pb-3002-200-vcmrcgoloaktppabmdfsgeczaixswmxt.jpeg",
 };
 
