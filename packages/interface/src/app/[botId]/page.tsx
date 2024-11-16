@@ -20,7 +20,10 @@ export default function Page({
               height: "calc(100vh - 72px)",
             }}
           >
-            <div className="flex-1 overflow-y-scroll overflow-x-hidden pt-4" id='chat'>
+            <div
+              className="flex-1 overflow-y-scroll overflow-x-hidden pt-4"
+              id="chat"
+            >
               <div className="mx-auto container ">
                 <BotHeader botId={botId} />
                 <BotChat />

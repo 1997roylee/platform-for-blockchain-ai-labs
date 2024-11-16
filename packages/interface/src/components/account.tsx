@@ -34,7 +34,7 @@ export default function Account() {
         address: data.primaryAddress,
       });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   if (session?.user && wallet?.id) {
@@ -44,7 +44,6 @@ export default function Account() {
       </AccountSheet>
     );
   }
-
 
   // console.log("data", data)
   if (isPending)

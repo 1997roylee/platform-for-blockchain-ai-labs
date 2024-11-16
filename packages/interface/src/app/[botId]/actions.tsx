@@ -15,15 +15,21 @@ export async function subscribeBot(botId: string) {
 
   const balance = await wallet.getBalance(Coinbase.assets.Eth);
 
-  if (Number(balance) < 0.001) {
+  if (Number(balance) < 0.003) {
     throw new Error("Insufficient funds");
   }
 
   // console.log("botId", botId, ethers.parseEther("0.001").toString());
   const abi = [
     {
-      inputs: [],
-      name: "subscribe",
+      inputs: [
+        {
+          internalType: "uint256",
+          name: "creditAmount",
+          type: "uint256",
+        },
+      ],
+      name: "buyCredits",
       outputs: [],
       stateMutability: "payable",
       type: "function",
@@ -33,16 +39,18 @@ export async function subscribeBot(botId: string) {
   try {
     const contractInvocation = await wallet.invokeContract({
       contractAddress: botId,
-      method: "subscribe",
-      args: {},
-      amount: 0.001,
+      method: "buyCredits",
+      args: {
+        creditAmount: "30",
+      },
+      amount: 0.003,
       assetId: Coinbase.assets.Eth,
       abi,
     });
     await contractInvocation.wait();
   } catch (error) {
     console.error(error);
-    throw new Error("Failed to subscribe");
+    throw new Error("Failed to buy");
   }
 
   return { success: true };

@@ -11,13 +11,10 @@ export default function SignIn() {
             redirectTo: "/",
           });
         }}
-        className="flex flex-col gap-3"
+        className="flex flex-col gap-6"
       >
-        <p className="text-center">
-          Talk to the best AI models like ChatGPT, GPT-4o, Claude 3.5 Sonnet,
-          FLUX1.1, and millions of others - all on Poe.
-        </p>
-        <Button size="lg" type="submit">
+        <p className="text-2xl font-medium text-center">Login your account</p>
+        <Button size="lg" type="submit" className="w-64">
           Login with Google
         </Button>
       </form>

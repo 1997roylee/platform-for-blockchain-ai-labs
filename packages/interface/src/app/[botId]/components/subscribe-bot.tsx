@@ -25,7 +25,7 @@ export default function SubscribeBot({ botId }: { botId: string }) {
   return (
     <div className="flex justify-center my-3">
       <Button size="lg" onClick={handleSubscribe} disabled={isLoading}>
-        {isLoading ? "Subscribing..." : "Subscribe (0.001 ETH)"}
+        {isLoading ? "Buying..." : "Buy 30 Credits (0.003 ETH)"}
       </Button>
     </div>
   );

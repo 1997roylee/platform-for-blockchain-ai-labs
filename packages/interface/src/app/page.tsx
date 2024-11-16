@@ -1,14 +1,13 @@
 "use client";
-import SearchBar from "./components/search-bar";
+// import SearchBar from "./components/search-bar";
 import BotsList from "./components/bots-list";
 import useBots from "@/hooks/use-bots";
 import SkeletonBotList from "./components/skeleton-bot-list";
-import { Address } from "viem";
 
 export default function Home() {
   const { isLoading, data: botList = [] } = useBots();
 
-  // console.log("botList", botList);
+  console.log("botList", botList);
   return (
     <div className="px-3">
       <div className="flex flex-col gap-12">
@@ -27,11 +26,13 @@ export default function Home() {
             {isLoading ? (
               <SkeletonBotList />
             ) : (
-              <BotsList data={(botList as Address[]) ?? []} />
+              <BotsList data={botList ?? []} />
             )}
           </div>
 
-          <div><div>Other bots</div></div>
+          <div>
+            <div>Other bots</div>
+          </div>
         </div>
       </div>
 

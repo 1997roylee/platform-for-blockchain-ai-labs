@@ -1,0 +1,101 @@
+fragment RegistryFragment on Registry {
+  id
+  factory {
+    id
+  }
+  creator
+  blockNumber
+  blockTimestamp
+  transactionHash
+  name
+  icon
+  description
+  agentId
+}
+
+query Factories {
+  factories(first: 100) {
+    id
+    registryCount
+    totalFeesETH
+    totalFeesUSD
+    registries {
+      ...RegistryFragment
+    }
+  }
+}
+
+query Factory($id: ID!) {
+  factory(id: $id) {
+    id
+    registryCount
+    totalFeesETH
+    totalFeesUSD
+    registries {
+      ...RegistryFragment
+    }
+  }
+}
+
+query Registries {
+  registries(first: 100) {
+    ...RegistryFragment
+  }
+}
+
+query Registry($id: ID!) {
+  registry(id: $id) {
+    ...RegistryFragment
+  }
+}
+
+query Purchases($buyer: Bytes!) {
+  purchases(first: 20, where: { buyer: $buyer }) {
+    id
+    registry {
+      ...RegistryFragment
+    }
+    buyer
+    credits
+    costs
+    blockNumber
+    blockTimestamp
+    transactionHash
+  }
+}
+
+query Purchase($id: ID!) {
+  purchase(id: $id) {
+    id
+    registry {
+      ...RegistryFragment
+    }
+    buyer
+    credits
+    costs
+    blockNumber
+    blockTimestamp
+    transactionHash
+  }
+}
+
+query Spends($spender: Bytes!) {
+  spends(first: 20, where: { spender: $spender }) {
+    id
+    registry {
+      ...RegistryFragment
+    }
+    spender
+    credits
+    blockNumber
+    blockTimestamp
+    transactionHash
+  }
+}
+
+query User($id: ID!) {
+  user(id: $id) {
+    id
+    totalCredits
+  }
+}

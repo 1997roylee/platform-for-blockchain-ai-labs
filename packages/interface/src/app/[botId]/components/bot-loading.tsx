@@ -28,21 +28,21 @@ export default function LoadingDots({
         className={cn(
           dotSizes[size],
           "rounded-full animate-loading-dot-1 bg-black",
-          color
+          color,
         )}
       />
       <div
         className={cn(
           dotSizes[size],
           "rounded-full animate-loading-dot-2 bg-black",
-          color
+          color,
         )}
       />
       <div
         className={cn(
           dotSizes[size],
           "rounded-full animate-loading-dot-3 bg-black",
-          color
+          color,
         )}
       />
     </div>
