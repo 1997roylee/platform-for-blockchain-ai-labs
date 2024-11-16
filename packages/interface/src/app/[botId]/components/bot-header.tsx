@@ -1,23 +1,46 @@
 "use client";
 import BotAvatar from "@/components/bot-avatar";
+import { Skeleton } from "@/components/ui/skeleton";
 import useBotStore from "@/hooks/use-bot-store";
+import useTotalSubscribers from "@/hooks/use-total-subscribers";
+import { formatWalletAddress } from "@/lib/format";
+import { getAddress } from "viem";
 
-export default function BotHeader() {
+export type BotHeaderProps = {
+  botId: string;
+};
+export default function BotHeader({ botId }: BotHeaderProps) {
   const { bot } = useBotStore();
-  const totalSubscribers = 204000;
+  const { isPending, data: totalSubscribers = BigInt(0) } = useTotalSubscribers(
+    getAddress(botId),
+  );
+
+  console.log("totalSubscribers", totalSubscribers);
+  // const totalSubscribers = 204000;
   return (
     <div className="rounded-2xl bg-gray-50 flex flex-col gap-1 p-3">
       <div className="flex gap-3 mb-3">
         <div className="w-24">
-          <BotAvatar src={bot?.icon} alt={bot?.name} />
+          {bot ? (
+            <BotAvatar src={bot.icon} alt={bot.name} />
+          ) : (
+            <Skeleton className="w-24 h-24" />
+          )}
         </div>
-        <div>
-          <p>{bot?.name}</p>
-          <p>by 1234</p>
+        <div className="flex flex-col gap-1">
+          {bot ? <p>{bot.name}</p> : <Skeleton className="w-20 h-6" />}
+          {bot ? (
+            <p className="text-sm">by @{formatWalletAddress(bot.creator)}</p>
+          ) : (
+            <Skeleton className="w-24 h-6" />
+          )}
         </div>
       </div>
-      <div className="text-sm">{totalSubscribers} followers</div>
+      <div className="text-sm text-gray-700">
+        {Number(totalSubscribers)} followers
+      </div>
       <div className="text-sm">{bot?.description}</div>
+      <div className="text-sm">1 credit per message</div>
     </div>
   );
 }

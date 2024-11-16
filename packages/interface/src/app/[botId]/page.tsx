@@ -10,16 +10,17 @@ export default function Page({
 }: {
   params: { botId: string };
 }) {
-  console.log("botId", botId);
   return (
     <ChatProvider>
       <BotProvider>
         <BotWrapper botId={botId}>
-          <div className="flex flex-col flex-1">
-            <BotHeader />
-            <BotChat />
-            <div className="pb-10">
-              <BotSendForm />
+          <div className="flex flex-1 flex-col overflow-y-scroll">
+            <div className="flex-1 mx-auto container">
+              <BotHeader botId={botId} />
+              <BotChat />
+            </div>
+            <div className="pb-10 mx-auto container">
+              <BotSendForm botId={botId} />
             </div>
           </div>
         </BotWrapper>

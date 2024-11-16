@@ -1,35 +1,26 @@
 "use client";
 
-import { decryptSeed } from "@/lib/crypto";
 import { formatWalletAddress } from "@/lib/format";
-import { Address, Wallet } from "@coinbase/coinbase-sdk";
-import { useQuery } from "@tanstack/react-query";
 import Avatar from "boring-avatars";
-import { useMemo } from "react";
+import { useBalance } from "wagmi";
+import { getAddress } from "viem";
 
-export default function AccountBalance() {
-  const { isPending, data } = useQuery({
-    queryKey: ["Account"],
-    queryFn: async () => {
-      return (await fetch("/api/wallets").then((res) => res.json())) as {
-        id: string;
-      }[];
+export default function AccountBalance({ address }: { address: string }) {
+  const { isPending, data: balance } = useBalance({
+    address: getAddress(address),
+    query: {
+      enabled: !!address,
+      refetchInterval: 15 * 1000,
     },
   });
 
-  console.log(data, "data");
-  const primaryAddress = useMemo(() => {
-    if (!data) return null;
-
-    return data[0].id;
-  }, [data]);
-
   return (
     <div className="flex gap-3 items-center cursor-pointer hover:bg-gray-50 rounded-full py-1 px-3">
-      <div className="">
-        {primaryAddress ? formatWalletAddress(primaryAddress) : null}
+      <div className="text-right">
+        <div>{address ? formatWalletAddress(address) : null}</div>
+        <div>{isPending ? 0 : balance?.formatted} ETH</div>
       </div>
-      <Avatar name="Alice Paul" variant="beam" size={48} />
+      <Avatar name={address} variant="beam" size={48} />
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { cookieToInitialState } from "wagmi";
 import { getConfig } from "@/lib/wagmi";
 import { headers } from "next/headers";
 import Headers from "@/components/headers";
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,11 +33,12 @@ export default function RootLayout({
         // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers initialState={initialState}>
-          <div className="min-h-dvh flex flex-col">
+          <div className="h-dvh flex flex-col">
             <Headers />
             {children}
           </div>
         </Providers>
+        <Toaster />
       </body>
     </html>
   );
