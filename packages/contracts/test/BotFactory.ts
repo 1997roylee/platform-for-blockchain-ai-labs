@@ -11,22 +11,12 @@ describe("BotFactory", function () {
 
   const mockBot = {
     name: "TestBot",
+    description: "A test bot",
     apiEndpoint: "http://localhost:3000/api/bot",
     icon: "https://qph.cf2.poecdn.net/main-thumb-pb-3002-200-vcmrcgoloaktppabmdfsgeczaixswmxt.jpeg",
     // version: BigInt(1),
-    fee: ethers.parseEther("0.01"),
+    credits: BigInt(30),
   };
-
-  //   async function deployBotFactoryFixture() {
-  //     const [owner] = await hre.ethers.getSigners();
-
-  //     const botFactory = await hre.ethers.deployContract("BotFactory", [owner]);
-
-  //     return {
-  //       botFactory,
-  //       owner,
-  //     };
-  //   }
 
   beforeEach(async function () {
     [owner, user] = await hre.ethers.getSigners();
@@ -46,9 +36,10 @@ describe("BotFactory", function () {
     it("Should create a new registry", async function () {
       const tx = await botFactory.createRegistry(
         mockBot.name,
+        mockBot.description,
         mockBot.icon,
         mockBot.apiEndpoint,
-        mockBot.fee
+        mockBot.credits
       );
 
       const receipt = await tx.wait();
@@ -73,7 +64,7 @@ describe("BotFactory", function () {
     //         mockBot.name,
     //         mockBot.apiInfo,
     //         mockBot.version,
-    //         mockBot.fee
+    //         mockBot.credits
     //       )
     //   ).to.be.reverted;
     // });
@@ -81,9 +72,10 @@ describe("BotFactory", function () {
     it("Should track created registries", async function () {
       await botFactory.createRegistry(
         mockBot.name,
+        mockBot.description,
         mockBot.icon,
         mockBot.apiEndpoint,
-        mockBot.fee
+        mockBot.credits
       );
 
       const registries = await botFactory.getRegistries();
@@ -93,9 +85,10 @@ describe("BotFactory", function () {
     it("Should create registry with correct parameters", async function () {
       const tx = await botFactory.createRegistry(
         mockBot.name,
+        mockBot.description,
         mockBot.icon,
         mockBot.apiEndpoint,
-        mockBot.fee
+        mockBot.credits
       );
 
       const receipt = await tx.wait();
@@ -113,7 +106,8 @@ describe("BotFactory", function () {
       expect(metadata.name).to.equal(mockBot.name);
       expect(metadata.icon).to.equal(mockBot.icon);
       expect(metadata.apiEndpoint).to.equal(mockBot.apiEndpoint);
-      expect(metadata.fee).to.equal(mockBot.fee);
+      expect(metadata.credits).to.equal(mockBot.credits);
+      expect(metadata.description).to.equal(mockBot.description);
       expect(metadata.creator).to.equal(owner.address);
     });
   });

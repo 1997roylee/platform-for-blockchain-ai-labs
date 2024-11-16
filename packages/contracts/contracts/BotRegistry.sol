@@ -6,66 +6,45 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 contract BotRegistry is Ownable, ReentrancyGuard {
     struct Metadata {
         string name;
+        string description;
         string icon;
         string apiEndpoint;
-        uint256 fee;
+        uint256 credits;
         address creator;
     }
 
     Metadata public metadata;
-    mapping(uint256 => mapping(address => bool)) public subscribers;
+    mapping(address => bool) public subscribers;
+    mapping(address => uint256) public userCredits;
+    mapping(address => uint256) public stakingBalance;
+    mapping(address => uint256) public lastRewardTime;
 
-    event ServicePaid(
-        uint256 indexed botId,
-        address indexed user,
-        uint256 amount
-    );
-    event MetadataUpdated(
-        string name,
-        string apiInfo,
-        uint256 version,
-        uint256 fee
-    );
-    event SubscriptionAdded(uint256 indexed botId, address indexed subscriber);
-    event SubscriptionRemoved(
-        uint256 indexed botId,
-        address indexed subscriber
-    );
+    uint256 public constant CREDITS_PER_MONTH = 30;
+    uint256 public constant MIN_STAKE_AMOUNT = 0.01 ether;
+    uint256 public constant SECONDS_PER_MONTH = 30 days;
+
+    event SubscriptionAdded(address indexed subscriber, uint256 credits);
+    event SubscriptionRemoved(address indexed subscriber);
+    event CreditsRecalculated(address indexed user, uint256 newCredits);
 
     constructor(
         string memory _name,
+        string memory _description,
         string memory _icon,
         string memory _apiEndpoint,
-        uint256 _fee,
+        uint256 _credits,
         address _creator
     ) Ownable(_creator) {
-        require(_fee > 0, "Fee must be positive");
+        require(_credits > 0, "Fee must be positive");
 
-        metadata = Metadata(_name, _icon, _apiEndpoint, _fee, _creator);
-    }
-
-    function subscribe(uint256 botId) external payable nonReentrant {
-        require(msg.value >= metadata.fee, "Insufficient payment");
-        require(!subscribers[botId][msg.sender], "Already subscribed");
-
-        subscribers[botId][msg.sender] = true;
-        emit SubscriptionAdded(botId, msg.sender);
-        // emit ServicePaid(botId, msg.sender, msg.value);
-    }
-
-    // Add unsubscribe function
-    function unsubscribe(uint256 botId) external nonReentrant {
-        require(subscribers[botId][msg.sender], "Not subscribed");
-
-        subscribers[botId][msg.sender] = false;
-        emit SubscriptionRemoved(botId, msg.sender);
-
-        // Optional: Refund remaining time if implementing time-based subscriptions
-        // uint256 refundAmount = calculateRefund();
-        // if (refundAmount > 0) {
-        //     (bool success, ) = msg.sender.call{value: refundAmount}("");
-        //     require(success, "Refund failed");
-        // }
+        metadata = Metadata(
+            _name,
+            _description,
+            _icon,
+            _apiEndpoint,
+            _credits,
+            _creator
+        );
     }
 
     modifier onlyCreator() {
@@ -76,6 +55,70 @@ contract BotRegistry is Ownable, ReentrancyGuard {
         _;
     }
 
+    // Add staking function
+    function subscribe() external payable {
+        require(
+            msg.value >= MIN_STAKE_AMOUNT,
+            "Minimum stake required: 0.1 ETH"
+        );
+        require(!subscribers[msg.sender], "Already subscribed");
+
+        subscribers[msg.sender] = true;
+        stakingBalance[msg.sender] += msg.value;
+        userCredits[msg.sender] += CREDITS_PER_MONTH;
+        // lastRewardTime[msg.sender] = block.timestamp;
+        emit SubscriptionAdded(msg.sender, CREDITS_PER_MONTH);
+    }
+
+    // Add unstaking function
+    function unstake() external {
+        require(subscribers[msg.sender], "Not subscribed");
+        uint256 amount = stakingBalance[msg.sender];
+        require(amount > 0, "No staking balance");
+
+        subscribers[msg.sender] = false;
+        stakingBalance[msg.sender] = 0;
+        (bool success, ) = msg.sender.call{value: amount}("");
+        require(success, "Transfer failed");
+        emit SubscriptionRemoved(msg.sender);
+    }
+
+    function recalculateCredits(address user) public returns (uint256) {
+        require(stakingBalance[user] > 0, "No staking balance");
+
+        uint256 timeElapsed = block.timestamp - lastRewardTime[user];
+
+        if (timeElapsed <= 0) {
+            // Calculate base credits from months elapsed
+            uint256 baseCredits = CREDITS_PER_MONTH;
+
+            // Calculate bonus credits based on stake amount
+            // uint256 stakeMultiplier = stakingBalance[user] / MIN_STAKE_AMOUNT;
+            // uint256 bonusCredits = (baseCredits * stakeMultiplier) / 10; // 10% bonus per MIN_STAKE_AMOUNT
+
+            uint256 totalNewCredits = baseCredits;
+
+            // Update state
+            userCredits[user] = totalNewCredits;
+            lastRewardTime[user] = block.timestamp;
+
+            emit CreditsRecalculated(user, totalNewCredits);
+            return totalNewCredits;
+        }
+
+        return 0;
+    }
+
+    // Add credit spending function
+    function spendCredits(uint256 amount) external {
+        require(userCredits[msg.sender] >= amount, "Insufficient credits");
+        userCredits[msg.sender] -= amount;
+    }
+
+    // Add credit balance check
+    function getCreditsBalance(address user) external view returns (uint256) {
+        return userCredits[user];
+    }
     // function updateMetadata(
     //     string memory _name,
     //     string memory _apiInfo,
