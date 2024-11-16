@@ -1,4 +1,5 @@
 import { FACTORY_ADDRESS } from "@/constants/addresses";
+import { DEFAULT_CHAIN_ID } from "@/constants/chain";
 import { useReadContract } from "wagmi";
 
 const abi = [
@@ -19,7 +20,6 @@ const abi = [
 
 export default function useBots() {
   return useReadContract({
-    chainId: 1337,
     abi,
     address: FACTORY_ADDRESS,
     functionName: "getRegistries",

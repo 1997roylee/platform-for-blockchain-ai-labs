@@ -14,6 +14,7 @@ export default function BotSendForm({ botId }: { botId: string }) {
     <>
       {!isSubscribed && <SubscribeBot botId={botId} />}
       <SearchBar onSubmit={sendMessage} disabled={isSubscribed} />
+      <p>Your credit remains: {credits}</p>
     </>
   );
 }

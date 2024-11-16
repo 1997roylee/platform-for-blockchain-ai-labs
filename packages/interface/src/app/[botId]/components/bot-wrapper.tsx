@@ -26,7 +26,10 @@ export default function BotWrapper({
 
   useEffect(() => {
     if (data) {
-      setBot(data);
+      setBot({
+        ...data,
+        id: botId,
+      });
     }
   }, [data]);
 

@@ -31,6 +31,7 @@ export default function useBotCredit(botId: Address, walletAddress?: Address) {
     args: walletAddress ? [walletAddress] : undefined,
     query: {
       enabled: !!walletAddress,
+      refetchInterval: 15 * 1000,
     },
   });
 }

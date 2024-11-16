@@ -2,6 +2,8 @@
 import SearchBar from "./components/search-bar";
 import BotsList from "./components/bots-list";
 import useBots from "@/hooks/use-bots";
+import SkeletonBotList from "./components/skeleton-bot-list";
+import { Address } from "viem";
 
 export default function Home() {
   const { isLoading, data: botList = [] } = useBots();
@@ -21,7 +23,11 @@ export default function Home() {
 
         <div className="container mx-auto">
           <div>Official bots</div>
-          <BotsList data={botList ?? []} />
+          {isLoading ? (
+            <SkeletonBotList />
+          ) : (
+            <BotsList data={(botList as Address[]) ?? []} />
+          )}
         </div>
       </div>
 

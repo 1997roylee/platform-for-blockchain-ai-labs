@@ -4,18 +4,13 @@ import { coinbaseWallet, injected } from "wagmi/connectors";
 
 export function getConfig() {
   return createConfig({
-    chains: [localhost], // add baseSepolia for testing
+    chains: [baseSepolia], // add baseSepolia for testing
     connectors: [
       injected(),
       coinbaseWallet({
         appName: "Create Wagmi",
         preference: "smartWalletOnly",
       }),
-      // coinbaseWallet({
-      //   appName: "OnchainKit",
-      //   preference: "smartWalletOnly",
-      //   version: "4",
-      // }),
     ],
     storage: createStorage({
       storage: cookieStorage,
