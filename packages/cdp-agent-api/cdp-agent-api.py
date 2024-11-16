@@ -1,24 +1,15 @@
-import json
 import os
 import sys
 import time
 from dotenv import load_dotenv
-from pathlib import Path
-
-project_root = Path(__file__).parent.absolute()
-env_path = '/Users/johnku/Desktop/Data addict/4. Coding/platform-for-blockchain-ai-labs/packages/cdp-agent-api/.env'
-
-# Load .env with explicit path
-load_dotenv(dotenv_path=env_path)
-
-# Load environment variables from .env file
-# load_dotenv()
+from agent.run_agent import run_agent
+# from pathlib import Path
 
 from langchain_core.messages import HumanMessage
 from langchain_openai import ChatOpenAI
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.prebuilt import create_react_agent
-
+from langchain_core.tools import Tool
 # Import CDP Agentkit Langchain Extension.
 from cdp_langchain.agent_toolkits import CdpToolkit
 from cdp_langchain.utils import CdpAgentkitWrapper
@@ -26,36 +17,62 @@ from cdp_langchain.tools import CdpTool
 from pydantic import BaseModel, Field
 
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import StreamingResponse
+from fastapi.middleware.cors import CORSMiddleware
+
 from pydantic import BaseModel
 
 app = FastAPI()
 
+
+# CORS (Cross-Origin Resource Sharing) middleware configuration
+origins = [
+    "http://localhost",
+    "http://localhost:3000",
+    "http://localhost:8080",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
+    allow_headers=["*"],
+)
+load_dotenv()
+
+
 class UserInput(BaseModel):
     message: str
+
 
 @app.on_event("startup")
 async def startup_event():
     global agent_executor, config
     agent_executor, config = initialize_agent()
 
+
 @app.post("/chat/")
 async def chat(user_input: UserInput):
     try:
-        response = []
-        for chunk in agent_executor.stream(
-            {"messages": [HumanMessage(content=user_input.message)]}, config):
-            if "agent" in chunk:
-                response.append(chunk["agent"]["messages"][0].content)
-            elif "tools" in chunk:
-                response.append(chunk["tools"]["messages"][0].content)
-        return {"response": response}
+        # response = []
+        # for chunk in agent_executor.stream(
+        #         {"messages": [HumanMessage(content=user_input.message)]}, config):
+        #     if "agent" in chunk:
+        #         response.append(chunk["agent"]["messages"][0].content)
+        #     elif "tools" in chunk:
+        #         response.append(chunk["tools"]["messages"][0].content)
+        # return {"response": response}
+        return StreamingResponse(run_agent(user_input.message, agent_executor, config), media_type='text/event-stream')
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.post("/autonomous/")
 async def autonomous(interval: int = 10):
     try:
-        run_autonomous_mode(agent_executor=agent_executor, config=config, interval=interval)
+        run_autonomous_mode(agent_executor=agent_executor,
+                            config=config, interval=interval)
         return {"status": "Autonomous mode started"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -71,7 +88,7 @@ wallet_data_file = "wallet_data.txt"
 # def clean_private_key(key: str) -> str:
 #     if not key:
 #         raise ValueError("CDP_API_KEY_PRIVATE_KEY not found in environment variables")
-    
+
 #     return (key
 #         .strip()
 #         .replace('\\n', '\n')  # Handle escaped newlines
@@ -87,11 +104,12 @@ wallet_data_file = "wallet_data.txt"
 # # Create toolkit from wrapper
 # toolkit = CdpToolkit.from_cdp_agentkit_wrapper(cdp)
 
-from langchain_core.tools import Tool
 
 # Define a new tool function
+
 def custom_tool_function(input: str) -> str:
     return f"Custom tool received: {input}"
+
 
 def initialize_agent():
     """Initialize the agent with CDP Agentkit."""
@@ -133,7 +151,7 @@ def initialize_agent():
     tools.append(custom_tool)
 
     # tools.append(CustomTool(name=''testing_custom_built'', description=''\nThis tool is a testing tool for the bot to show me I can custom make functions, when users ask about testing_custom_built, tell them Happy Cat'', args_schema=''testing)'')')
-    print(tools)
+    # print(tools)
 
     # Store buffered conversation history in memory.
     memory = MemorySaver()
@@ -144,8 +162,7 @@ def initialize_agent():
         llm,
         tools=tools,
         checkpointer=memory,
-        state_modifier=
-        "You are a helpful agent that can interact onchain using the Coinbase Developer Platform Agentkit. You are empowered to interact onchain using your tools. If you ever need funds, you can request them from the faucet if you are on network ID `base-sepolia`. If not, you can provide your wallet details and request funds from the user. If someone asks you to do something you can't do with your currently available tools, you must say so, and encourage them to implement it themselves using the CDP SDK + Agentkit, recommend they go to docs.cdp.coinbase.com for more informaton. Be concise and helpful with your responses. Refrain from restating your tools' descriptions unless it is explicitly requested.",
+        state_modifier="You are a helpful agent that can interact onchain using the Coinbase Developer Platform Agentkit. You are empowered to interact onchain using your tools. If you ever need funds, you can request them from the faucet if you are on network ID `base-sepolia`. If not, you can provide your wallet details and request funds from the user. If someone asks you to do something you can't do with your currently available tools, you must say so, and encourage them to implement it themselves using the CDP SDK + Agentkit, recommend they go to docs.cdp.coinbase.com for more informaton. Be concise and helpful with your responses. Refrain from restating your tools' descriptions unless it is explicitly requested.",
     ), config
 
 
@@ -162,6 +179,8 @@ def run_autonomous_mode(agent_executor, config, interval=10):
         time.sleep(interval)
 
 # Chat Mode
+
+
 def run_chat_mode(agent_executor, config):
     """Run the agent interactively based on user input."""
     print("Starting chat mode... Type 'exit' to end.")
@@ -173,7 +192,7 @@ def run_chat_mode(agent_executor, config):
 
             # Run agent with the user's input in chat mode
             for chunk in agent_executor.stream(
-                {"messages": [HumanMessage(content=user_input)]}, config):
+                    {"messages": [HumanMessage(content=user_input)]}, config):
                 if "agent" in chunk:
                     print(chunk["agent"]["messages"][0].content)
                 elif "tools" in chunk:
@@ -216,5 +235,3 @@ def main():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
-
-
