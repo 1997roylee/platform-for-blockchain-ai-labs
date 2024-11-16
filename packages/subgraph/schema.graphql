@@ -1,0 +1,63 @@
+type Factory @entity {
+  # factory address
+  id: ID!
+  # amount of option created
+  registryCount: BigInt!
+
+  totalFeesETH: BigDecimal!
+
+  totalFeesUSD: BigDecimal!
+  # options
+  registries: [Registry!]! @derivedFrom(field: "factory")
+}
+
+type Registry @entity {
+  # registry address
+  id: ID!
+  # factory address
+  factory: Factory!
+  # creator address
+  creator: Bytes!
+  # block number
+  blockNumber: BigInt!
+  # block timestamp
+  blockTimestamp: BigInt!
+  # transaction hash
+  transactionHash: Bytes!
+}
+
+type Purchase @entity {
+  # purchase address
+  id: ID!
+  # registry address
+  registry: Registry!
+  # buyer address
+  buyer: Bytes!
+
+  credits: BigInt!
+
+  costs: BigInt!
+  # block number
+  blockNumber: BigInt!
+  # block timestamp
+  blockTimestamp: BigInt!
+  # transaction hash
+  transactionHash: Bytes!
+}
+
+type Spend @entity {
+  # purchase address
+  id: ID!
+  # registry address
+  registry: Registry!
+  # creator address
+  spender: Bytes!
+
+  credits: BigInt!
+  # block number
+  blockNumber: BigInt!
+  # block timestamp
+  blockTimestamp: BigInt!
+  # transaction hash
+  transactionHash: Bytes!
+}

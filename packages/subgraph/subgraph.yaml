@@ -1,0 +1,50 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: BotFactory
+    network: base-sepolia
+    source:
+      abi: BotFactory
+      address: "0x6ec2092F13b0c9eb1dBe73A733D7F1F85Ed99117"
+      startBlock: 18007340
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Factory
+        - Registry
+      abis:
+        - name: BotFactory
+          file: ./abis/BotFactory.json
+      eventHandlers:
+        - event: RegistryCreated(indexed address,indexed address)
+          handler: handleOptionCreated
+      file: ./src/mapping/factory.ts
+templates:
+  - kind: ethereum/contract
+    name: Registry
+    network: base-sepolia
+    source:
+      abi: BotRegistry
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Registry
+        - Spend
+        - Purchase
+      abis:
+        - name: BotRegistry
+          file: ./abis/BotRegistry.json
+      eventHandlers:
+        - event: CreditsPurchased(indexed address,uint256,uint256)
+          handler: handleCreditsPurchased
+        - event: CreditsUsed(indexed address,uint256)
+          handler: handleCreditsUsed
+      file: ./src/mapping/templates/registry.ts

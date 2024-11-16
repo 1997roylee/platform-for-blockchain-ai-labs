@@ -1,7 +1,7 @@
 {
   "base-sepolia": {
     "BotFactory": {
-      "address": "0x5b0683a95951dAc71f7F07c5Af21021c3ba20F1F",
+      "address": "0x6ec2092F13b0c9eb1dBe73A733D7F1F85Ed99117",
       "startBlock": 18007340
     }
   }
