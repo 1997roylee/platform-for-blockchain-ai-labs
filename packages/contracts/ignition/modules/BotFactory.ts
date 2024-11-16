@@ -2,15 +2,12 @@
 // Learn more about it at https://hardhat.org/ignition
 
 import { buildModule } from "@nomicfoundation/hardhat-ignition/modules";
-import { ethers } from "hardhat";
 
 const mockBot = {
   name: "TestBot",
   description: "A test bot",
   apiEndpoint: "http://localhost:3000/api/bot",
   icon: "https://qph.cf2.poecdn.net/main-thumb-pb-3002-200-vcmrcgoloaktppabmdfsgeczaixswmxt.jpeg",
-  // version: BigInt(1),
-  fee: ethers.parseEther("0.01"),
 };
 
 const BotFactoryModule = buildModule("BotFactoryModule", (m) => {
@@ -24,7 +21,7 @@ const BotFactoryModule = buildModule("BotFactoryModule", (m) => {
     mockBot.description,
     mockBot.icon,
     mockBot.apiEndpoint,
-    ethers.parseEther("0.1"), // 0.1 Tokens per option
+    BigInt(30)
   ]);
 
   // Retrieve option address from emitted event
