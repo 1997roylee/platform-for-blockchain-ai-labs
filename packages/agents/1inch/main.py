@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 from agent.run_agent import run_agent
 from agent.cache_agent import initialize_agent_with_cache
+from actions.check_price_action import CheckPriceAction
 
 # Import CDP Agentkit Langchain Extension.
 from pydantic import BaseModel
@@ -8,6 +9,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+
 
 app = FastAPI()
 
@@ -38,7 +40,7 @@ class UserInput(BaseModel):
 @app.post("/chat")
 async def chat(user_input: UserInput):
     try:
-        agent_executor = initialize_agent_with_cache(user_input.wallet_id)
+        agent_executor = initialize_agent_with_cache(user_input.wallet_id, agent_klass=CheckPriceAction)
         config = {"configurable": {"thread_id": user_input.conversation_id}}
         return StreamingResponse(run_agent(user_input.message, agent_executor, config), media_type='text/event-stream')
     except Exception as e:

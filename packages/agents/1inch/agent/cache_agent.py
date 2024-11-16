@@ -32,17 +32,17 @@ class AgentCache:
 # Create singleton cache instance
 agent_cache_instance = AgentCache()
 
-def initialize_agent_with_cache(wallet_id: str = None):
+def initialize_agent_with_cache(wallet_id: str = None, agent_klass = None):
     """Initialize agent with caching support"""
     
     # print("hi")
     # Try to get from cache first
-    cached_agent = agent_cache_instance.get_agent(wallet_id)
-    if cached_agent is not None:
-        return cached_agent
+    # cached_agent = agent_cache_instance.get_agent(wallet_id)
+    # if cached_agent is not None:
+    #     return cached_agent
 
     # Initialize new agent if not in cache
-    agent = initialize_agent(wallet_id)
+    agent = initialize_agent(wallet_id, agent_klass)
     # Cache the new agent
     agent_cache_instance.set_agent(wallet_id, agent)
     

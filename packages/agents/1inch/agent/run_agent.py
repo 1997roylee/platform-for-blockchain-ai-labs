@@ -2,7 +2,6 @@ from typing import Iterator
 from langchain_core.messages import HumanMessage
 import constants
 from utils import format_sse
-# from agent.handle_agent_action import handle_agent_action
 
 def run_agent(input, agent_executor, config) -> Iterator[str]:
     """Run the agent and yield formatted SSE messages"""
