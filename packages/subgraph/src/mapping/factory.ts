@@ -1,9 +1,9 @@
-import { RegistryCreated as RegistryCreatedEvent } from "../../generated/BotFactory/BotFactory";
-import { Registry } from "../../generated/schema";
-import { Registry as RegistryTemplate } from "../../generated/templates";
-import { ONE_BIG_INT } from "../utils/constants";
-import { getOrCreateFactory } from "../utils/factory";
-import { buildID } from "../utils/registry";
+import { RegistryCreated as RegistryCreatedEvent } from '../../generated/BotFactory/BotFactory';
+import { Registry } from '../../generated/schema';
+import { Registry as RegistryTemplate } from '../../generated/templates';
+import { ONE_BIG_INT } from '../utils/constants';
+import { getOrCreateFactory } from '../utils/factory';
+import { buildID } from '../utils/registry';
 
 export function handleOptionCreated(event: RegistryCreatedEvent): void {
   const factory = getOrCreateFactory(event.address.toHexString());

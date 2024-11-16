@@ -9,7 +9,7 @@ dataSources:
     network: base-sepolia
     source:
       abi: BotFactory
-      address: "0x6ec2092F13b0c9eb1dBe73A733D7F1F85Ed99117"
+      address: '0x6ec2092F13b0c9eb1dBe73A733D7F1F85Ed99117'
       startBlock: 18007340
     mapping:
       kind: ethereum/events

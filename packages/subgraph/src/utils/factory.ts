@@ -1,5 +1,5 @@
-import { Factory } from "../../generated/schema";
-import { ZERO_BIG_DECIMAL, ZERO_BIG_INT } from "./constants";
+import { Factory } from '../../generated/schema';
+import { ZERO_BIG_DECIMAL, ZERO_BIG_INT } from './constants';
 
 export function getOrCreateFactory(id: string): Factory {
   let factory = Factory.load(id);

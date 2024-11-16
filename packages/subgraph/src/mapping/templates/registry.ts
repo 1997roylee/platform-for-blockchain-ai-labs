@@ -1,11 +1,11 @@
-import { Purchase, Spend } from "../../../generated/schema";
+import { Purchase, Spend } from '../../../generated/schema';
 import {
   CreditsPurchased as CreditsPurchasedEvent,
   CreditsUsed as CreditsUsedEvent,
-} from "../../../generated/templates/Registry/BotRegistry";
-import { buildID as buildPurchasId } from "../../utils/purchase";
-import { buildID as buildSpendId } from "../../utils/spend";
-import { getOrCreateRegistry } from "../../utils/registry";
+} from '../../../generated/templates/Registry/BotRegistry';
+import { buildID as buildPurchasId } from '../../utils/purchase';
+import { buildID as buildSpendId } from '../../utils/spend';
+import { getOrCreateRegistry } from '../../utils/registry';
 
 export function handleCreditsPurchased(event: CreditsPurchasedEvent): void {
   const id = buildPurchasId(event.transaction.hash, event.transaction.index);
