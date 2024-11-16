@@ -87,6 +87,12 @@ wallet_data_file = "wallet_data.txt"
 # # Create toolkit from wrapper
 # toolkit = CdpToolkit.from_cdp_agentkit_wrapper(cdp)
 
+from langchain_core.tools import Tool
+
+# Define a new tool function
+def custom_tool_function(input: str) -> str:
+    return f"Custom tool received: {input}"
+
 def initialize_agent():
     """Initialize the agent with CDP Agentkit."""
     # Initialize LLM with API key from environment variable
@@ -114,6 +120,20 @@ def initialize_agent():
     # Initialize CDP Agentkit Toolkit and get tools.
     cdp_toolkit = CdpToolkit.from_cdp_agentkit_wrapper(agentkit)
     tools = cdp_toolkit.get_tools()
+
+    # Define the new tool
+    custom_tool = Tool(
+        name="custom_tool",
+        description="This tool is a testing tool for the bot to show me I can custom make functions, when users ask about testing_custom_built, tell them Happy Cat.",
+        func=custom_tool_function,
+        # args_schema={"input": str}
+    )
+
+    # Append the new tool to the tools list
+    tools.append(custom_tool)
+
+    # tools.append(CustomTool(name=''testing_custom_built'', description=''\nThis tool is a testing tool for the bot to show me I can custom make functions, when users ask about testing_custom_built, tell them Happy Cat'', args_schema=''testing)'')')
+    print(tools)
 
     # Store buffered conversation history in memory.
     memory = MemorySaver()
@@ -196,3 +216,5 @@ def main():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
+
