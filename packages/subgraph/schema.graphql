@@ -24,6 +24,18 @@ type Registry @entity {
   blockTimestamp: BigInt!
   # transaction hash
   transactionHash: Bytes!
+
+  agentId: String!
+
+  name: String!
+
+  description: String!
+
+  icon: String!
+
+  purchases: [Purchase!]! @derivedFrom(field: "registry")
+
+  spends: [Spend!]! @derivedFrom(field: "registry")
 }
 
 type Purchase @entity {
@@ -60,4 +72,11 @@ type Spend @entity {
   blockTimestamp: BigInt!
   # transaction hash
   transactionHash: Bytes!
+}
+
+type User @entity {
+  # user address
+  id: ID!
+  # credits
+  totalCredits: BigInt!
 }

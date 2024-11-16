@@ -1,6 +1,8 @@
-import { Address, BigInt } from '@graphprotocol/graph-ts';
-// import { Option as OptionContract } from '../../generated/templates/Option/Option';
-import { ONE_BIG_INT, ZERO_ADDRESS } from './constants';
+import { Address } from '@graphprotocol/graph-ts';
+import {
+  BotRegistry__metadataResult,
+  BotRegistry as BotRegistryContract,
+} from '../../generated/BotFactory/BotRegistry';
 import { Registry } from '../../generated/schema';
 
 export function buildID(id: Address): string {
@@ -18,15 +20,21 @@ export function getOrCreateRegistry(registryAddress: Address): Registry {
   return registry as Registry;
 }
 
-// export function fetchUnderlyingToken(option: OptionContract): Address {
-//   const underlyingToken = option.try_underlyingToken();
+export function fetchMetadata(registry: BotRegistryContract): BotRegistry__metadataResult {
+  const metadata = registry.try_metadata();
 
-//   if (underlyingToken.reverted) {
-//     return ZERO_ADDRESS;
-//   }
+  //   if (metadata.reverted) {
+  //     return ZERO_ADDRESS;
+  //   }
 
-//   return underlyingToken.value;
-// }
+  assert(
+    !metadata.reverted,
+    'accessed value of a reverted call, ' +
+      'please check the `reverted` field before accessing the `value` field'
+  );
+
+  return metadata.value;
+}
 
 // export function fetchUnderlyingAmountPerOption(option: OptionContract): BigInt {
 //   const underlyingAmount = option.try_underlyingAmountPerOption();
