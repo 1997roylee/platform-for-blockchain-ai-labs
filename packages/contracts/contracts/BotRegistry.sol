@@ -2,50 +2,51 @@
 pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/math/Math.sol";
 
 contract BotRegistry is Ownable, ReentrancyGuard {
+    using Math for uint256;
+
     struct Metadata {
         string name;
         string description;
         string icon;
         string agentId;
-        uint256 credits;
+        // uint256 credits;
         address creator;
     }
 
     Metadata public metadata;
     mapping(address => bool) public subscribers;
     mapping(address => uint256) public userCredits;
-    mapping(address => uint256) public stakingBalance;
-    mapping(address => uint256) public lastRewardTime;
+    uint256 public ownerBalance;
+    uint256 public totalSubscribers = 0;
 
-    uint256 public constant CREDITS_PER_MONTH = 30;
-    uint256 public constant MIN_STAKE_AMOUNT = 0.001 ether;
-    uint256 public constant SECONDS_PER_MONTH = 30 days;
+    // Constants
+    uint256 public constant MIN_CREDITS = 30;
+    uint256 public constant MAX_CREDITS_PER_PURCHASE = 1000;
+    uint256 public constant CREDIT_PRICE = 0.0001 ether;
 
-    uint256 private totalSubscribers = 0;
-
-    event SubscriptionAdded(address indexed subscriber, uint256 credits);
-    event SubscriptionRemoved(address indexed subscriber);
-    event CreditsRecalculated(address indexed user, uint256 newCredits);
+    // Events
     event CreditsPurchased(address indexed user, uint256 amount, uint256 cost);
+    event CreditsUsed(address indexed user, uint256 amount);
+    event OwnerWithdrawal(uint256 amount);
+    event MetadataUpdated(string name, string description);
 
     constructor(
         string memory _name,
         string memory _description,
         string memory _icon,
         string memory _agentId,
-        uint256 _credits,
+        // uint256 _credits,
         address _creator
     ) Ownable(_creator) {
-        require(_credits > 0, "Fee must be positive");
-
         metadata = Metadata(
             _name,
             _description,
             _icon,
             _agentId,
-            _credits,
+            // _credits,
             _creator
         );
     }
@@ -58,74 +59,38 @@ contract BotRegistry is Ownable, ReentrancyGuard {
         _;
     }
 
-    // function buyCredits(uint256 creditAmount) external payable {
-    //     require(creditAmount > 0, "Must buy at least 1 credit");
-    //     uint256 cost = creditAmount * CREDIT_PRICE;
-    //     require(msg.value >= cost, "Insufficient payment");
+    function withdraw() external onlyOwner {
+        require(ownerBalance > 0, "No balance to withdraw");
 
-    //     // Update credits
-    //     userCredits[msg.sender] += creditAmount;
+        uint256 amount = ownerBalance;
+        ownerBalance = 0;
 
-    //     // Refund excess payment if any
-    //     uint256 excess = msg.value - cost;
-    //     if (excess > 0) {
-    //         (bool success, ) = msg.sender.call{value: excess}("");
-    //         require(success, "Refund failed");
-    //     }
-
-    //     emit CreditsPurchased(msg.sender, creditAmount, cost);
-    // }
-
-    // Add staking function
-    function subscribe() external payable {
-        require(
-            msg.value >= MIN_STAKE_AMOUNT,
-            "Minimum stake required: 0.001 ETH"
-        );
-        require(!subscribers[msg.sender], "Already subscribed");
-
-        subscribers[msg.sender] = true;
-        totalSubscribers++;
-        stakingBalance[msg.sender] += msg.value;
-        userCredits[msg.sender] += CREDITS_PER_MONTH;
-
-        emit SubscriptionAdded(msg.sender, CREDITS_PER_MONTH);
-    }
-
-    // Add unstaking function
-    function unstake() external {
-        require(subscribers[msg.sender], "Not subscribed");
-        uint256 amount = stakingBalance[msg.sender];
-        require(amount > 0, "No staking balance");
-
-        subscribers[msg.sender] = false;
-        totalSubscribers--;
-        stakingBalance[msg.sender] = 0;
-        (bool success, ) = msg.sender.call{value: amount}("");
+        (bool success, ) = payable(owner()).call{value: amount}("");
         require(success, "Transfer failed");
-        emit SubscriptionRemoved(msg.sender);
+
+        emit OwnerWithdrawal(amount);
     }
 
-    function recalculateCredits(address user) public returns (uint256) {
-        require(stakingBalance[user] > 0, "No staking balance");
+    function buyCredits(uint256 creditAmount) external payable nonReentrant {
+        require(creditAmount >= MIN_CREDITS, "Amount below minimum");
+        require(
+            creditAmount <= MAX_CREDITS_PER_PURCHASE,
+            "Amount above maximum"
+        );
 
-        uint256 timeElapsed = block.timestamp - lastRewardTime[user];
+        uint256 cost = creditAmount * CREDIT_PRICE;
+        require(msg.value >= cost, "Insufficient payment");
 
-        if (timeElapsed <= 0) {
-            // Calculate base credits from months elapsed
-            uint256 baseCredits = CREDITS_PER_MONTH;
+        // Update credits
+        userCredits[msg.sender] += creditAmount;
+        ownerBalance += msg.value;
 
-            uint256 totalNewCredits = baseCredits;
+        emit CreditsPurchased(msg.sender, creditAmount, cost);
 
-            // Update state
-            userCredits[user] = totalNewCredits;
-            lastRewardTime[user] = block.timestamp;
-
-            emit CreditsRecalculated(user, totalNewCredits);
-            return totalNewCredits;
+        if (!subscribers[msg.sender]) {
+            subscribers[msg.sender] = true;
+            totalSubscribers++;
         }
-
-        return 0;
     }
 
     // Add credit spending function
@@ -141,5 +106,13 @@ contract BotRegistry is Ownable, ReentrancyGuard {
 
     function getTotalSubscribers() external view returns (uint256) {
         return totalSubscribers;
+    }
+
+    receive() external payable {
+        ownerBalance += msg.value;
+    }
+
+    fallback() external payable {
+        ownerBalance += msg.value;
     }
 }

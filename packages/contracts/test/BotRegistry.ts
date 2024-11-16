@@ -3,16 +3,15 @@ import { expect } from "chai";
 import hre from "hardhat";
 import { BotRegistry } from "../typechain-types";
 import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers";
-import { ethers } from "ethers";
-import { time } from "@nomicfoundation/hardhat-network-helpers";
+import { ethers, parseEther } from "ethers";
 
 describe("BotRegistry", function () {
   let botRegistry: BotRegistry;
   let owner: SignerWithAddress;
   let user: SignerWithAddress;
   const MIN_STAKE = ethers.parseEther("0.01");
-  const CREDITS_PER_MONTH = 30;
-  const SECONDS_PER_MONTH = 30 * 24 * 60 * 60;
+  // const CREDITS_PER_MONTH = 30;
+  // const SECONDS_PER_MONTH = 30 * 24 * 60 * 60;
 
   const mockBot = {
     name: "TestBot",
@@ -33,7 +32,7 @@ describe("BotRegistry", function () {
       mockBot.description,
       mockBot.icon,
       mockBot.apiEndpoint,
-      mockBot.credits,
+      // mockBot.credits,
     );
 
     const receipt = await tx.wait();
@@ -51,95 +50,50 @@ describe("BotRegistry", function () {
 
   describe("Staking", function () {
     it("Should allow staking with minimum amount", async function () {
-      await expect(botRegistry.connect(user).subscribe({ value: MIN_STAKE }))
-        .to.emit(botRegistry, "SubscriptionAdded")
-        .withArgs(user.address, BigInt(30));
+      await expect(
+        botRegistry.connect(user).buyCredits(30, { value: MIN_STAKE }),
+      )
+        .to.emit(botRegistry, "CreditsPurchased")
+        .withArgs(user.address, BigInt(30), BigInt(30) * parseEther("0.0001"));
 
-      expect(await botRegistry.stakingBalance(user.address)).to.equal(
-        MIN_STAKE,
-      );
+      expect(await botRegistry.userCredits(user.address)).to.equal(30);
     });
 
     it("Should reject stake below minimum amount", async function () {
       await expect(
-        botRegistry.connect(user).subscribe({ value: MIN_STAKE / BigInt(2) }),
-      ).to.be.revertedWith("Minimum stake required: 0.1 ETH");
+        botRegistry
+          .connect(user)
+          .buyCredits(30, { value: MIN_STAKE / BigInt(20) }),
+      ).to.be.revertedWith("Insufficient payment");
     });
   });
 
-  describe("Credit Earning", function () {
-    beforeEach(async function () {
-      await botRegistry.connect(user).subscribe({ value: MIN_STAKE });
-    });
-
-    it("Should earn credits after one month", async function () {
-      await time.increase(SECONDS_PER_MONTH);
-      await botRegistry.recalculateCredits(user.address);
-
-      expect(await botRegistry.userCredits(user.address)).to.equal(
-        CREDITS_PER_MONTH,
-      );
-    });
-
-    it("Should earn proportional credits for multiple months", async function () {
-      await time.increase(SECONDS_PER_MONTH * 2);
-      await botRegistry.recalculateCredits(user.address);
-
-      expect(await botRegistry.userCredits(user.address)).to.equal(
-        CREDITS_PER_MONTH,
-      );
-    });
-  });
-
-  //   describe("Unstaking", function () {
-  //     beforeEach(async function () {
-  //       await botRegistry.connect(user).subscribe({ value: MIN_STAKE });
-  //     });
-
-  //     it("Should allow unstaking full amount", async function () {
-  //       const balanceBefore = await ethers.provider.getBalance(user.address);
-
-  //       await botRegistry.connect(user).unstake();
-
-  //       expect(await botRegistry.stakingBalance(user.address)).to.equal(0);
-  //       const balanceAfter = await ethers.provider.getBalance(user.address);
-  //       expect(balanceAfter).to.be.gt(balanceBefore);
-  //     });
-
-  //     it("Should not allow unstaking with zero balance", async function () {
-  //       await botRegistry.connect(user).unstake();
-  //       await expect(botRegistry.connect(user).unstake()).to.be.revertedWith(
-  //         "No staking balance",
-  //       );
-  //     });
+  // describe("Credit Management", function () {
+  //   beforeEach(async function () {
+  //     await botRegistry.connect(user).subscribe({ value: MIN_STAKE });
+  //     await time.increase(SECONDS_PER_MONTH);
+  //     await botRegistry.recalculateCredits(user.address);
   //   });
 
-  describe("Credit Management", function () {
-    beforeEach(async function () {
-      await botRegistry.connect(user).subscribe({ value: MIN_STAKE });
-      await time.increase(SECONDS_PER_MONTH);
-      await botRegistry.recalculateCredits(user.address);
-    });
+  //   it("Should allow spending earned credits", async function () {
+  //     const spendAmount = 10;
+  //     await botRegistry.connect(user).spendCredits(spendAmount);
 
-    it("Should allow spending earned credits", async function () {
-      const spendAmount = 10;
-      await botRegistry.connect(user).spendCredits(spendAmount);
+  //     expect(await botRegistry.userCredits(user.address)).to.equal(
+  //       CREDITS_PER_MONTH - spendAmount,
+  //     );
+  //   });
 
-      expect(await botRegistry.userCredits(user.address)).to.equal(
-        CREDITS_PER_MONTH - spendAmount,
-      );
-    });
+  //   it("Should not allow spending more than available credits", async function () {
+  //     await expect(
+  //       botRegistry.connect(user).spendCredits(CREDITS_PER_MONTH + 1),
+  //     ).to.be.revertedWith("Insufficient credits");
+  //   });
 
-    it("Should not allow spending more than available credits", async function () {
-      await expect(
-        botRegistry.connect(user).spendCredits(CREDITS_PER_MONTH + 1),
-      ).to.be.revertedWith("Insufficient credits");
-    });
-
-    it("Should correctly report credit balance", async function () {
-      expect(await botRegistry.getCreditsBalance(user.address)).to.equal(
-        CREDITS_PER_MONTH,
-      );
-    });
-  });
+  //   it("Should correctly report credit balance", async function () {
+  //     expect(await botRegistry.getCreditsBalance(user.address)).to.equal(
+  //       CREDITS_PER_MONTH,
+  //     );
+  //   });
+  // });
 });

@@ -16,15 +16,19 @@ contract BotFactory is Ownable {
         string memory name,
         string memory description,
         string memory icon,
-        string memory agentId,
-        uint256 credits
-    ) external onlyOwner returns (address) {
+        string memory agentId
+    )
+        external
+        // uint256 credits
+        onlyOwner
+        returns (address)
+    {
         BotRegistry newRegistry = new BotRegistry(
             name,
             description,
             icon,
             agentId,
-            credits,
+            // credits,
             msg.sender
         );
 

@@ -15,7 +15,7 @@ describe("BotFactory", function () {
     agentId: "demo",
     icon: "https://qph.cf2.poecdn.net/main-thumb-pb-3002-200-vcmrcgoloaktppabmdfsgeczaixswmxt.jpeg",
     // version: BigInt(1),
-    credits: BigInt(30),
+    // credits: BigInt(30),
   };
 
   beforeEach(async function () {
@@ -39,7 +39,7 @@ describe("BotFactory", function () {
         mockBot.description,
         mockBot.icon,
         mockBot.agentId,
-        mockBot.credits
+        // mockBot.credits
       );
 
       const receipt = await tx.wait();
@@ -75,7 +75,7 @@ describe("BotFactory", function () {
         mockBot.description,
         mockBot.icon,
         mockBot.agentId,
-        mockBot.credits
+        // mockBot.credits
       );
 
       const registries = await botFactory.getRegistries();
@@ -88,7 +88,7 @@ describe("BotFactory", function () {
         mockBot.description,
         mockBot.icon,
         mockBot.agentId,
-        mockBot.credits
+        // mockBot.credits
       );
 
       const receipt = await tx.wait();
@@ -106,7 +106,7 @@ describe("BotFactory", function () {
       expect(metadata.name).to.equal(mockBot.name);
       expect(metadata.icon).to.equal(mockBot.icon);
       expect(metadata.agentId).to.equal(mockBot.agentId);
-      expect(metadata.credits).to.equal(mockBot.credits);
+      // expect(metadata.credits).to.equal(mockBot.credits);
       expect(metadata.description).to.equal(mockBot.description);
       expect(metadata.creator).to.equal(owner.address);
     });
