@@ -1,3 +1,3 @@
 
 
-poetry run python cdp-agent-api.py
+poetry run python app.py
