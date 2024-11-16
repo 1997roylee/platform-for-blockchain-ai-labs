@@ -1,14 +1,15 @@
+import { Bot } from "@/hooks/use-bot-metadata";
 import { createStore } from "zustand";
 
 export interface BotStore {
-  bot: {};
-  setBot: (bot: {}) => void;
+  bot: Bot | null;
+  setBot: (bot: Bot) => void;
 }
 
 export function craeteBotStore() {
   return createStore<BotStore>((set) => ({
-    bot: {},
-    setBot: (bot) => {
+    bot: null,
+    setBot: (bot: Bot) => {
       set({ bot });
     },
   }));

@@ -8,6 +8,7 @@ import useBotMetadata from "@/hooks/use-bot-metadata";
 export default function BotItem({ address }: { address: Address }) {
   const { isPending, data: bot } = useBotMetadata(address);
 
+  console.log("bot", bot);
   return (
     <Link href={`/${address}`}>
       <div className="rounded-xl border flex p-3 hover:bg-gray-50 cursor-pointer gap-3">
@@ -16,7 +17,7 @@ export default function BotItem({ address }: { address: Address }) {
         </div>
         <div>
           <p>{bot?.name}</p>
-          <p className="text-sm">Description</p>
+          <p className="text-sm">{bot?.description}</p>
         </div>
       </div>
     </Link>

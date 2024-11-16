@@ -15,6 +15,11 @@ const abi = [
       },
       {
         internalType: "string",
+        name: "description",
+        type: "string",
+      },
+      {
+        internalType: "string",
         name: "icon",
         type: "string",
       },
@@ -25,7 +30,7 @@ const abi = [
       },
       {
         internalType: "uint256",
-        name: "fee",
+        name: "credits",
         type: "uint256",
       },
       {
@@ -39,6 +44,15 @@ const abi = [
   },
 ] as const;
 
+export type Bot = {
+  name: string;
+  description: string;
+  icon: string;
+  apiEndpoint: string;
+  creator: Address;
+  credits: BigInt;
+};
+
 export default function useBotMetadata(address: Address) {
   const { data, ...rest } = useReadContract({
     abi,
@@ -51,11 +65,12 @@ export default function useBotMetadata(address: Address) {
 
     return {
       name: data?.[0],
-      icon: data?.[1],
-      apiEndpoint: data?.[2],
-      fee: data?.[3],
-      creator: data?.[4],
-    };
+      description: data?.[1],
+      icon: data?.[2],
+      apiEndpoint: data?.[3],
+      credits: data?.[4],
+      creator: data?.[5],
+    } as Bot;
   }, [data]);
   return {
     data: formattedData,

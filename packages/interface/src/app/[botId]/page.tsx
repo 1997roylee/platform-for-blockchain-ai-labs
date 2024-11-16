@@ -3,6 +3,7 @@ import BotChat from "./components/bot-chat";
 import BotHeader from "./components/bot-header";
 import BotSendForm from "./components/bot-send-form";
 import BotWrapper from "./components/bot-wrapper";
+import BotProvider from "@/components/bot-provider";
 
 export default function Page({
   params: { botId },
@@ -12,16 +13,17 @@ export default function Page({
   console.log("botId", botId);
   return (
     <ChatProvider>
-      <BotWrapper botId={botId}>
-        <div className="flex flex-col flex-1">
-          <BotHeader />
-          <BotChat />
-          {/* <div className="flex-1 flex-grow"></div> */}
-          <div className="pb-10">
-            <BotSendForm />
+      <BotProvider>
+        <BotWrapper botId={botId}>
+          <div className="flex flex-col flex-1">
+            <BotHeader />
+            <BotChat />
+            <div className="pb-10">
+              <BotSendForm />
+            </div>
           </div>
-        </div>
-      </BotWrapper>
+        </BotWrapper>
+      </BotProvider>
     </ChatProvider>
   );
 }

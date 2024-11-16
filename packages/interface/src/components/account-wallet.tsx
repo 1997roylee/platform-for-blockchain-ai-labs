@@ -22,10 +22,10 @@ export default function AccountBalance() {
     if (!data) return null;
 
     return data[0].id;
-  }, []);
+  }, [data]);
 
   return (
-    <div className="flex gap-3 items-center cursor-pointer hover:bg-gray-50 rounded-xl p-1">
+    <div className="flex gap-3 items-center cursor-pointer hover:bg-gray-50 rounded-full py-1 px-3">
       <div className="">
         {primaryAddress ? formatWalletAddress(primaryAddress) : null}
       </div>
