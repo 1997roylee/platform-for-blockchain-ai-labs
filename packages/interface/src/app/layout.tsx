@@ -8,7 +8,7 @@ import { getConfig } from "@/lib/wagmi";
 import { headers } from "next/headers";
 import Headers from "@/components/headers";
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -32,8 +32,10 @@ export default function RootLayout({
         // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers initialState={initialState}>
-          <Headers />
-          {children}
+          <div className="min-h-dvh flex flex-col">
+            <Headers />
+            {children}
+          </div>
         </Providers>
       </body>
     </html>

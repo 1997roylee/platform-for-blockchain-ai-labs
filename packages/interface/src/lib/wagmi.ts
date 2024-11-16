@@ -1,5 +1,5 @@
 import { http, cookieStorage, createConfig, createStorage } from "wagmi";
-import { sepolia, base, localhost, baseSepolia } from "wagmi/chains";
+import { localhost, baseSepolia } from "wagmi/chains";
 import { coinbaseWallet, injected } from "wagmi/connectors";
 
 export function getConfig() {
@@ -7,7 +7,10 @@ export function getConfig() {
     chains: [localhost], // add baseSepolia for testing
     connectors: [
       injected(),
-      coinbaseWallet({ appName: 'Create Wagmi', preference: 'smartWalletOnly' }),
+      coinbaseWallet({
+        appName: "Create Wagmi",
+        preference: "smartWalletOnly",
+      }),
       // coinbaseWallet({
       //   appName: "OnchainKit",
       //   preference: "smartWalletOnly",
@@ -19,11 +22,8 @@ export function getConfig() {
     }),
     ssr: true,
     transports: {
-      [localhost.id]: http('http://localhost:8545'),
-      // [sepolia.id]: http(),
-      // [base.id]: http(), // add baseSepolia for testing
-      // [baseSepolia.id]: http(),
-      
+      [localhost.id]: http("http://localhost:8545"),
+      [baseSepolia.id]: http(),
     },
   });
 }

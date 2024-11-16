@@ -19,7 +19,7 @@ const abi = [
 
 export default function useBots() {
   return useReadContract({
-    // chainId: 1337,
+    chainId: 1337,
     abi,
     address: FACTORY_ADDRESS,
     functionName: "getRegistries",

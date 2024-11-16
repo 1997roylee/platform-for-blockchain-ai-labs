@@ -1,5 +1,5 @@
-import { Button } from "./ui/button";
-import WalletWrapper from "./wallet-wrapper";
+
+import Wallet from "./account";
 
 export default function Headers() {
   return (
@@ -8,7 +8,8 @@ export default function Headers() {
       {/* <Button>
 
       </Button> */}
-      <WalletWrapper />
+      {/* <WalletWrapper /> */}
+      <Wallet />
     </div>
   );
 }
