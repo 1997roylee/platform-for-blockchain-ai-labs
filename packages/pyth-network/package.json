@@ -1,0 +1,28 @@
+{
+  "name": "open-ai",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm --filter interface dev",
+    "test": "tsx test/mintNFT.tsx"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@pythnetwork/pyth-evm-js": "^1.76.0",
+    "@pythnetwork/pyth-sdk-solidity": "^4.0.0",
+    "dotenv": "^16.4.5",
+    "hardhat": "^2.22.15",
+    "hardhat-console": "^1.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5",
+    "viem": "^2.21.45"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "tsx": "^4.19.2"
+  }
+}
