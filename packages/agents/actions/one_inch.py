@@ -37,7 +37,7 @@ def get_requested_token_prices(tokens):
         print("Prices for requested tokens:")
         for token_address, price in prices.items():
             print(f"{token_address}: {price}")
-            result += f"{token_address}: {price}\n"
+            result += f"Token Address: {token_address}\nPrice: {price} USD\n"
     else:
         print("Failed to fetch token prices.")
         result = "Failed to fetch token prices."
@@ -53,7 +53,7 @@ def get_prices_for_addresses(addresses):
         prices = response.json()
         result = ""
         for token_address, price in prices.items():
-            result += f"{token_address}: {price} USD\n"
+            result += f"Token Address: {token_address} \n USD: {price}\n"
         return result
     else:
         # print("Failed to fetch token prices.")
@@ -61,8 +61,7 @@ def get_prices_for_addresses(addresses):
 
 
 CHECK_PRICE_PROMPT = """
-This tool will check the token price onchain. It takes the symbol of the token as inputs."""
-
+This tool will check the token price onchain. It takes the address of the token as inputs."""
 
 class CheckPriceInput(BaseModel):
     """Input argument schema for deploy NFT action."""
@@ -97,7 +96,7 @@ def check_price(address: str) -> str:
 
 
 class CheckPriceAction(CdpAction):
-    """Deploy NFT action."""
+    """Check Price By 1Inch."""
 
     name: str = "check_price"
     description: str = CHECK_PRICE_PROMPT

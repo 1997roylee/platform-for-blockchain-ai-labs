@@ -44,7 +44,7 @@ def custom_tool_function(input: str) -> str:
     return f"Custom tool received: {input}"
 
 
-def initialize_agent(wallet_id: str, agent_klass = None):
+def initialize_agent(wallet_id: str, action_klass = None):
     """Initialize the agent with CDP Agentkit."""
     # Initialize LLM with API key from environment variable
     llm = ChatOpenAI(model="gpt-4o-mini", api_key=os.getenv("OPENAI_API_KEY"))
@@ -75,17 +75,17 @@ def initialize_agent(wallet_id: str, agent_klass = None):
     cdp_toolkit = CdpToolkit.from_cdp_agentkit_wrapper(agentkit)
     tools = cdp_toolkit.get_tools()
 
-    if agent_klass is not None:
+    if action_klass is not None:
         # print(agent_klass.name)
-        klass = agent_klass()
-        signMessageTool = CdpTool(
+        klass = action_klass()
+        custom_tool = CdpTool(
             name=klass.name,
             description=klass.description,
             cdp_agentkit_wrapper=agentkit,
             args_schema=klass.args_schema,
             func=klass.func,
         )
-        tools.append(signMessageTool)
+        tools.append(custom_tool)
         # print(agent_klass.func, agent_klass.description, agent_klass.args_schema )
 
     # tools.append(CustomTool(name=''testing_custom_built'', description=''\nThis tool is a testing tool for the bot to show me I can custom make functions, when users ask about testing_custom_built, tell them Happy Cat'', args_schema=''testing)'')')
