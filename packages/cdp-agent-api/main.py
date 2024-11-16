@@ -1,7 +1,6 @@
 from dotenv import load_dotenv
 from agent.run_agent import run_agent
-from agent.initialize_agent import initialize_agent
-from agent.get_wallet import get_wallet
+from agent.cache_agent import initialize_agent_with_cache
 
 # Import CDP Agentkit Langchain Extension.
 from pydantic import BaseModel
@@ -32,36 +31,20 @@ load_dotenv()
 
 class UserInput(BaseModel):
     message: str
-    conversation_id: str
-
-class WalletInput(BaseModel):
     wallet_id: str
-
-
-@app.on_event("startup")
-async def startup_event():
-    global agent_executor, config
-    agent_executor, config = initialize_agent()
+    conversation_id: str
 
 
 @app.post("/chat")
 async def chat(user_input: UserInput):
     try:
+        agent_executor = initialize_agent_with_cache(user_input.wallet_id)
         config = {"configurable": {"thread_id": user_input.conversation_id}}
         return StreamingResponse(run_agent(user_input.message, agent_executor, config), media_type='text/event-stream')
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    
-@app.post("/wallet")
-async def chat(user_input: WalletInput):
-    try:
-        return {
-            "wallet": get_wallet(user_input.wallet_id)
-        }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
