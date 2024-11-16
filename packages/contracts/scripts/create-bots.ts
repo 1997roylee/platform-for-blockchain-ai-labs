@@ -5,8 +5,8 @@ const mockBots = [
     name: "Token Bot",
     description:
       "Deploy and manage ERC20 tokens with customizable parameters. Features include minting, burning, and transfer controls.",
-    agentId: "token",
-    icon: "https://qph.cf2.poecdn.net/main-thumb-pb-3002-200-vcmrcgoloaktppabmdfsgeczaixswmxt.jpeg",
+    agentId: "normal",
+    icon: "http://localhost:3000/coin.webp",
   },
   {
     name: "1Inch Bot",
@@ -15,12 +15,13 @@ const mockBots = [
     agentId: "1inch",
     icon: "http://localhost:3000/1inch.webp",
   },
-  // {
-  //   name: "NFT Forge",
-  //   description: "Create and deploy NFT collections with customizable metadata, royalties, and minting strategies.",
-  //   agentId: "nft",
-  //   icon: "https://qph.cf2.poecdn.net/main-thumb-pb-3002-200-vcmrcgoloaktppabmdfsgeczaixswmxt.jpeg",
-  // },
+  {
+    name: "Uniswap",
+    description:
+      "Create and manage liquidity pools on Uniswap V3. Earn fees and rewards from trading activity.",
+    agentId: "uniswap",
+    icon: "http://localhost:3000/uniswap.png",
+  },
   {
     name: "Blockscout Bot",
     description:
@@ -33,7 +34,7 @@ const mockBots = [
 async function main() {
   const botFactory = await hre.ethers.getContractAt(
     "BotFactory",
-    "0x5b0683a95951dAc71f7F07c5Af21021c3ba20F1F",
+    "0xAfa9CdC683045f23990A7d4Aaf5D8C41C6881796",
   );
 
   for (const bot of mockBots) {
@@ -42,7 +43,7 @@ async function main() {
       bot.description,
       bot.icon,
       bot.agentId,
-      BigInt(30),
+      // BigInt(30),
     );
     await tx.wait();
   }

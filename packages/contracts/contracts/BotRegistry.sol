@@ -12,14 +12,12 @@ contract BotRegistry is Ownable, ReentrancyGuard {
         string description;
         string icon;
         string agentId;
-        // uint256 credits;
         address creator;
     }
 
     Metadata public metadata;
     mapping(address => bool) public subscribers;
     mapping(address => uint256) public userCredits;
-    uint256 public ownerBalance;
     uint256 public totalSubscribers = 0;
 
     // Constants
@@ -30,7 +28,6 @@ contract BotRegistry is Ownable, ReentrancyGuard {
     // Events
     event CreditsPurchased(address indexed user, uint256 amount, uint256 cost);
     event CreditsUsed(address indexed user, uint256 amount);
-    event OwnerWithdrawal(uint256 amount);
     event MetadataUpdated(string name, string description);
 
     constructor(
@@ -59,18 +56,6 @@ contract BotRegistry is Ownable, ReentrancyGuard {
         _;
     }
 
-    function withdraw() external onlyOwner {
-        require(ownerBalance > 0, "No balance to withdraw");
-
-        uint256 amount = ownerBalance;
-        ownerBalance = 0;
-
-        (bool success, ) = payable(owner()).call{value: amount}("");
-        require(success, "Transfer failed");
-
-        emit OwnerWithdrawal(amount);
-    }
-
     function buyCredits(uint256 creditAmount) external payable nonReentrant {
         require(creditAmount >= MIN_CREDITS, "Amount below minimum");
         require(
@@ -83,7 +68,18 @@ contract BotRegistry is Ownable, ReentrancyGuard {
 
         // Update credits
         userCredits[msg.sender] += creditAmount;
-        ownerBalance += msg.value;
+
+        // Refund excess payment
+        if (msg.value > cost) {
+            (bool refundSuccess, ) = payable(msg.sender).call{
+                value: msg.value - cost
+            }("");
+            require(refundSuccess, "Refund failed");
+        }
+
+        // Transfer payment to owner using safe transfer
+        (bool success, ) = payable(owner()).call{value: cost}("");
+        require(success, "Transfer to owner failed");
 
         emit CreditsPurchased(msg.sender, creditAmount, cost);
 
@@ -97,6 +93,8 @@ contract BotRegistry is Ownable, ReentrancyGuard {
     function spendCredits(uint256 amount) external {
         require(userCredits[msg.sender] >= amount, "Insufficient credits");
         userCredits[msg.sender] -= amount;
+
+        emit CreditsUsed(msg.sender, amount);
     }
 
     // Add credit balance check
@@ -106,13 +104,5 @@ contract BotRegistry is Ownable, ReentrancyGuard {
 
     function getTotalSubscribers() external view returns (uint256) {
         return totalSubscribers;
-    }
-
-    receive() external payable {
-        ownerBalance += msg.value;
-    }
-
-    fallback() external payable {
-        ownerBalance += msg.value;
     }
 }
