@@ -18,7 +18,7 @@ export default function BotHeader({ botId }: BotHeaderProps) {
   console.log("totalSubscribers", totalSubscribers);
   // const totalSubscribers = 204000;
   return (
-    <div className="rounded-2xl bg-gray-50 flex flex-col gap-1 p-3">
+    <div className="rounded-2xl flex flex-col gap-1 p-3 bg-gray-50">
       <div className="flex gap-3 mb-3">
         <div className="w-24">
           {bot ? (

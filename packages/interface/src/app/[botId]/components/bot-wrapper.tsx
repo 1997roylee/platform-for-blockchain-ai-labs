@@ -1,4 +1,5 @@
 "use client";
+import useAccountStore from "@/hooks/use-account-store";
 import useBotCredit from "@/hooks/use-bot-credit";
 import useBotMetadata from "@/hooks/use-bot-metadata";
 import useBotStore from "@/hooks/use-bot-store";
@@ -16,11 +17,12 @@ export default function BotWrapper({
   children,
 }: BotWrapperProps & PropsWithChildren) {
   const { setBot } = useBotStore();
+  const { wallet } = useAccountStore();
   const { setCredits } = useChatStore();
-  const { data: account } = useMyAccount();
+  // const { data: account } = useMyAccount();
   const { data: credits } = useBotCredit(
     getAddress(botId),
-    account ? getAddress(account?.[0]?.id) : undefined,
+    wallet.id ? getAddress(wallet.address) : undefined,
   );
   const { data } = useBotMetadata(getAddress(botId));
 

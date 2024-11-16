@@ -6,37 +6,46 @@ import Link from "next/link";
 import AccountBalance from "./account-wallet";
 import AccountSheet from "./account-sheet";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
+import { useEffect } from "react";
 import { Skeleton } from "./ui/skeleton";
+import useAccountStore from "@/hooks/use-account-store";
 
 export default function Account() {
   const { data: session } = useSession();
+  const { setWallet, wallet } = useAccountStore();
 
-  const { data } = useQuery({
+  const { data, isPending } = useQuery({
     queryKey: ["Account"],
     queryFn: async () => {
       return (await fetch("/api/wallets").then((res) => res.json())) as {
         id: string;
-      }[];
+        primaryAddress: string;
+      };
     },
     enabled: !!session?.user,
   });
 
-  const primaryAddress = useMemo(() => {
-    if (!data) return undefined;
+  console.log("wallet", data);
 
-    return data[0].id;
+  useEffect(() => {
+    console.log(data);
+    if (data) {
+      setWallet({
+        id: data.id,
+        address: data.primaryAddress,
+      });
+    }
   }, [data]);
 
-  if (!session?.user) {
+  if (session?.user && wallet?.id) {
     return (
-      <Link href="/login">
-        <Button size="lg">Login</Button>
-      </Link>
+      <AccountSheet address={wallet.address}>
+        <AccountBalance address={wallet.address} />
+      </AccountSheet>
     );
   }
 
-  if (!primaryAddress)
+  if (isPending || !data)
     return (
       <div>
         <Skeleton className="w-24 h-12" />
@@ -44,8 +53,8 @@ export default function Account() {
     );
 
   return (
-    <AccountSheet address={primaryAddress}>
-      <AccountBalance address={primaryAddress} />
-    </AccountSheet>
+    <Link href="/login">
+      <Button size="lg">Login</Button>
+    </Link>
   );
 }

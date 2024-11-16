@@ -12,6 +12,8 @@ export interface ChatStore {
   addMessage: (message: Message) => void;
   credits: number;
   setCredits: (credits: number) => void;
+  isLoading: boolean;
+  setIsLoading: (isLoading: boolean) => void;
 }
 
 export function createChatStore() {
@@ -26,6 +28,10 @@ export function createChatStore() {
     credits: 0,
     setCredits: (credits) => {
       set({ credits });
+    },
+    isLoading: false,
+    setIsLoading: (isLoading) => {
+      set({ isLoading });
     },
   }));
 }

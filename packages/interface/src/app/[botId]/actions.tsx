@@ -1,9 +1,10 @@
 "use server";
 
 import { auth } from "@/lib/auth";
+import prisma from "@/lib/prisma";
 import { getWallet } from "@/lib/server/wallet";
+import { Message } from "@/stores/chat";
 import { Coinbase } from "@coinbase/coinbase-sdk";
-import { ethers } from "ethers";
 
 export async function subscribeBot(botId: string) {
   const session = await auth();
@@ -46,6 +47,51 @@ export async function subscribeBot(botId: string) {
     throw new Error("Failed to subscribe");
   }
 
+  return { success: true };
+}
+
+export async function saveThreadMessages(
+  threadId: string,
+  agentId: string,
+  messages: Message[],
+) {
+  const session = await auth();
+
+  if (!session?.user) {
+    throw new Error("Unauthorized");
+  }
+
+  await prisma.thread.upsert({
+    where: {
+      id: threadId,
+    },
+    update: {
+      messages: {
+        createMany: {
+          data: messages.map((message) => ({
+            content: message.text,
+            role: message.role.toUpperCase(),
+            // threadId,
+            // userId: session.user!.id!,
+          })),
+        },
+      },
+    },
+    create: {
+      agentId,
+      userId: session.user.id!,
+      messages: {
+        createMany: {
+          data: messages.map((message) => ({
+            content: message.text,
+            role: message.role.toUpperCase(),
+            // threadId,
+            // userId: session.user!.id!,
+          })),
+        },
+      },
+    },
+  });
   return { success: true };
 }
 

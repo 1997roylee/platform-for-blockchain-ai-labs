@@ -13,7 +13,9 @@ export default function BotMessageItem({ message }: BotMessageItemProps) {
     >
       <p>{isBot ? "Bot" : "You"}</p>
       <div className={cn("inline-flex", isBot ? "text-left" : "text-right")}>
-        <div className="rounded-xl bg-gray-100 p-3">{message.text}</div>
+        <div className="rounded-xl bg-gray-100 p-3 break-all text-wrap max-w-xl md:ax-w-lg">
+          {message.text}
+        </div>
       </div>
     </div>
   );

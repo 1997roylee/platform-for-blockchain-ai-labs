@@ -20,7 +20,11 @@ export async function GET() {
   const seed = decryptSeed(walletRecord.encryptedSeed);
   const wallet = await Wallet.fetch(walletRecord.walletId);
   wallet.setSeed(seed as string);
+  console.log("wallet", wallet.getId());
   const addresses = await wallet.listAddresses();
 
-  return NextResponse.json(addresses);
+  return NextResponse.json({
+    id: wallet.getId(),
+    primaryAddress: addresses[0].getId(),
+  });
 }

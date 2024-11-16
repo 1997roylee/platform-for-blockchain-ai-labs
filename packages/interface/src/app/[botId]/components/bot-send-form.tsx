@@ -8,13 +8,17 @@ export default function BotSendForm({ botId }: { botId: string }) {
   const { sendMessage } = useChat();
   const { credits } = useChatStore();
 
-  const isSubscribed = credits >= 0;
+  const isSubscribed = credits > 0;
+
+  console.log("credits", credits);
 
   return (
     <>
       {!isSubscribed && <SubscribeBot botId={botId} />}
       <SearchBar onSubmit={sendMessage} disabled={isSubscribed} />
-      <p>Your credit remains: {credits}</p>
+      <p className="mt-1 text-sm text-right">
+        Your credit remains: {credits} Credits
+      </p>
     </>
   );
 }

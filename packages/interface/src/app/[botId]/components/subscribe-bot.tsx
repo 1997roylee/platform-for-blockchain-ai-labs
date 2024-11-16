@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 // import useChatStore from "@/hooks/use-chat-store";
 import useSafeServerAction from "use-safe-server-action";
-import { subscribeBot } from "../action";
+import { subscribeBot } from "../actions";
 import toast from "react-hot-toast";
 
 export default function SubscribeBot({ botId }: { botId: string }) {

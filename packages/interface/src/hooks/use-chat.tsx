@@ -1,17 +1,19 @@
 "use client";
-import { useState } from "react";
 import useChatStore from "./use-chat-store";
 import useBotStore from "./use-bot-store";
 import toast from "react-hot-toast";
-import { spendCredit } from "@/app/[botId]/action";
+import { saveThreadMessages, spendCredit } from "@/app/[botId]/actions";
+import useMyAccount from "./use-my-account";
+import useAccountStore from "./use-account-store";
 
 export default function useChat() {
   const { bot } = useBotStore();
-  const { credits, messages, addMessage } = useChatStore();
-  const [isLoading, setIsLoading] = useState(false);
+  const { isLoading, credits, setCredits, messages, addMessage, setIsLoading } =
+    useChatStore();
 
+  const { wallet } = useAccountStore();
   const sendMessage = async (message: string) => {
-    console.log("sendMessage", message);
+    // console.log("sendMessage", message);
     if (!bot) throw new Error("Bot not found");
 
     if (credits <= 0 || !credits) {
@@ -37,7 +39,11 @@ export default function useChat() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({
+        message,
+        conversation_id: bot.id,
+        wallet_id: wallet.id,
+      }),
     });
 
     if (!response.ok) {
@@ -46,6 +52,7 @@ export default function useChat() {
 
     await spendCredit(bot.id);
 
+    setCredits(credits - 1);
     const text = await response.text();
     const parsedMessages = text
       .trim()
@@ -60,13 +67,27 @@ export default function useChat() {
       })
       .filter(Boolean);
 
-    console.log("parsedMessages", parsedMessages);
+    // console.log("parsedMessages", parsedMessages);
     addMessage({
       text: parsedMessages[0].data,
       role: "BOT",
       timestamp: Date.now(),
       id: Math.random().toString(),
     });
+    await saveThreadMessages(bot.id, bot.id, [
+      {
+        text: message,
+        role: "USER",
+        timestamp: Date.now(),
+        id: Math.random().toString(),
+      },
+      {
+        text: parsedMessages[0].data,
+        role: "BOT",
+        timestamp: Date.now(),
+        id: Math.random().toString(),
+      },
+    ]);
     setIsLoading(false);
   };
 

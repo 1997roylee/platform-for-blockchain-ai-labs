@@ -6,8 +6,8 @@ export default function BotChat() {
   const { messages, isLoading } = useChat();
   return (
     <div className="flex-grow flex-col flex gap-3 py-4">
-      {messages.map((message) => {
-        return <BotMessageItem message={message} key={message.id} />;
+      {messages.map((message, index) => {
+        return <BotMessageItem key={message.id} message={message} />;
       })}
       {isLoading && <div className="text-center">Loading...</div>}
     </div>

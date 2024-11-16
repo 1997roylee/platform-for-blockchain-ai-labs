@@ -9,7 +9,8 @@
     "lint": "next lint",
     "db:migrate": "pnpm exec prisma migrate dev",
     "db:generate": "pnpm exec prisma generate",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "postinstall": "pnpm db:migrate"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.3",

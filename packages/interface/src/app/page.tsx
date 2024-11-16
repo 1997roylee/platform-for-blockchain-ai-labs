@@ -8,9 +8,9 @@ import { Address } from "viem";
 export default function Home() {
   const { isLoading, data: botList = [] } = useBots();
 
-  console.log("botList", botList);
+  // console.log("botList", botList);
   return (
-    <div className="">
+    <div className="px-3">
       <div className="flex flex-col gap-12">
         <div className="flex-col container gap-6 mx-auto max-w-4xl">
           <div className="mt-10 ">

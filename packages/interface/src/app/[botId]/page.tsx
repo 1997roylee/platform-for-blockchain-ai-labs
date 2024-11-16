@@ -14,12 +14,19 @@ export default function Page({
     <ChatProvider>
       <BotProvider>
         <BotWrapper botId={botId}>
-          <div className="flex flex-1 flex-col overflow-y-scroll">
-            <div className="flex-1 mx-auto container">
-              <BotHeader botId={botId} />
-              <BotChat />
+          <div
+            className="flex flex-col"
+            style={{
+              height: "calc(100vh - 72px)",
+            }}
+          >
+            <div className="flex-1 overflow-y-scroll overflow-x-hidden pt-4">
+              <div className="mx-auto container ">
+                <BotHeader botId={botId} />
+                <BotChat />
+              </div>
             </div>
-            <div className="pb-10 mx-auto container">
+            <div className="py-3 mx-auto container">
               <BotSendForm botId={botId} />
             </div>
           </div>
