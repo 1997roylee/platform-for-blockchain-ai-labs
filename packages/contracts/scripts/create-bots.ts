@@ -1,7 +1,4 @@
-// This setup uses Hardhat Ignition to manage smart contract deployments.
-// Learn more about it at https://hardhat.org/ignition
-
-import { buildModule } from "@nomicfoundation/hardhat-ignition/modules";
+import hre from "hardhat";
 
 const mockBots = [
   {
@@ -33,21 +30,27 @@ const mockBots = [
   },
 ];
 
-const BotFactoryModule = buildModule("BotFactoryModule", (m) => {
-  const botFactory = m.contract("BotFactory", [
-    m.getParameter<string>("deployer"),
-  ]);
+async function main() {
+  const botFactory = await hre.ethers.getContractAt(
+    "BotFactory",
+    "0x5b0683a95951dAc71f7F07c5Af21021c3ba20F1F",
+  );
 
-  // Create a sample CallOption using OptionFactory
-  // const sampleRegistry = m.call(botFactory, "createRegistry", [
-  //   mockBots[0].name,
-  //   mockBots[0].description,
-  //   mockBots[0].icon,
-  //   mockBots[0].agentId,
-  //   BigInt(30),
-  // ]);
+  for (const bot of mockBots) {
+    const tx = await botFactory.createRegistry(
+      bot.name,
+      bot.description,
+      bot.icon,
+      bot.agentId,
+      BigInt(30),
+    );
+    await tx.wait();
+  }
+}
 
-  return { botFactory };
-});
-
-export default BotFactoryModule;
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error("Deployment failed:", error);
+    process.exit(1);
+  });

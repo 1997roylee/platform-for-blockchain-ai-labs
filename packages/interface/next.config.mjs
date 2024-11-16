@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["qph.cf2.poecdn.net"],
+    domains: ["qph.cf2.poecdn.net", "localhost"],
   },
 };
 

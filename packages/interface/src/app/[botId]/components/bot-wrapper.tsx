@@ -4,7 +4,7 @@ import useBotCredit from "@/hooks/use-bot-credit";
 import useBotMetadata from "@/hooks/use-bot-metadata";
 import useBotStore from "@/hooks/use-bot-store";
 import useChatStore from "@/hooks/use-chat-store";
-import useMyAccount from "@/hooks/use-my-account";
+// import useMyAccount from "@/hooks/use-my-account";
 import { PropsWithChildren, useEffect } from "react";
 import { getAddress } from "viem";
 

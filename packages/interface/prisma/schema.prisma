@@ -28,7 +28,7 @@ model User {
   // Authenticator Authenticator[]
 
   // messages Message[]
-  threads Thread[]
+  // threads Thread[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -101,37 +101,37 @@ model VerificationToken {
 //   @@id([userId, credentialID])
 // }
 
-model Thread {
-  id         String    @id @default(cuid())
-  // title     String?
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  messages   Message[]
-  agentId    String
-  userId     String
-  botAddress String
-  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  // users     User[]    @relation("ThreadToUser")
+// model Thread {
+//   id         String    @id @default(cuid())
+//   // title     String?
+//   createdAt  DateTime  @default(now())
+//   updatedAt  DateTime  @updatedAt
+//   messages   Message[]
+//   agentId    String
+//   userId     String
+//   botAddress String
+//   user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   // users     User[]    @relation("ThreadToUser")
 
-  @@index([agentId])
-}
+//   @@index([agentId])
+// }
 
-enum Role {
-  USER
-  ASSISTANT
-  BOT
-}
+// enum Role {
+//   USER
+//   ASSISTANT
+//   BOT
+// }
 
-model Message {
-  id        String   @id @default(cuid())
-  content   String   @db.Text
-  role      Role // "user" | "assistant"
-  createdAt DateTime @default(now())
-  threadId  String
-  // userId    String
-  thread    Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
-  // user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  // @@index([userId])
+// model Message {
+//   id        String   @id @default(cuid())
+//   content   String   @db.Text
+//   role      Role // "user" | "assistant"
+//   createdAt DateTime @default(now())
+//   threadId  String
+//   // userId    String
+//   thread    Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
+//   // user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   // @@index([userId])
 
-  @@index([threadId])
-}
+//   @@index([threadId])
+// }

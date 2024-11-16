@@ -15,19 +15,23 @@ export default function Home() {
         <div className="flex-col container gap-6 mx-auto max-w-4xl">
           <div className="mt-10 ">
             <div className="font-medium text-2xl text-center py-6">
-              AI X Crypto
+              P4B - AI Labs
             </div>
           </div>
-          <SearchBar />
+          {/* <SearchBar /> */}
         </div>
 
-        <div className="container mx-auto">
-          <div>Official bots</div>
-          {isLoading ? (
-            <SkeletonBotList />
-          ) : (
-            <BotsList data={(botList as Address[]) ?? []} />
-          )}
+        <div className="container mx-auto flex flex-col gap-6">
+          <div>
+            <div>Official bots</div>
+            {isLoading ? (
+              <SkeletonBotList />
+            ) : (
+              <BotsList data={(botList as Address[]) ?? []} />
+            )}
+          </div>
+
+          <div><div>Other bots</div></div>
         </div>
       </div>
 

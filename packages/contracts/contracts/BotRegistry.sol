@@ -8,7 +8,7 @@ contract BotRegistry is Ownable, ReentrancyGuard {
         string name;
         string description;
         string icon;
-        string apiEndpoint;
+        string agentId;
         uint256 credits;
         address creator;
     }
@@ -20,9 +20,8 @@ contract BotRegistry is Ownable, ReentrancyGuard {
     mapping(address => uint256) public lastRewardTime;
 
     uint256 public constant CREDITS_PER_MONTH = 30;
-    uint256 public constant MIN_STAKE_AMOUNT = 0.01 ether;
+    uint256 public constant MIN_STAKE_AMOUNT = 0.001 ether;
     uint256 public constant SECONDS_PER_MONTH = 30 days;
-    // uint256 public constant CREDIT_PRICE = 0.0001 ether; // 0.0001 ETH per credit
 
     uint256 private totalSubscribers = 0;
 
@@ -35,7 +34,7 @@ contract BotRegistry is Ownable, ReentrancyGuard {
         string memory _name,
         string memory _description,
         string memory _icon,
-        string memory _apiEndpoint,
+        string memory _agentId,
         uint256 _credits,
         address _creator
     ) Ownable(_creator) {
@@ -45,7 +44,7 @@ contract BotRegistry is Ownable, ReentrancyGuard {
             _name,
             _description,
             _icon,
-            _apiEndpoint,
+            _agentId,
             _credits,
             _creator
         );
@@ -81,7 +80,7 @@ contract BotRegistry is Ownable, ReentrancyGuard {
     function subscribe() external payable {
         require(
             msg.value >= MIN_STAKE_AMOUNT,
-            "Minimum stake required: 0.01 ETH"
+            "Minimum stake required: 0.001 ETH"
         );
         require(!subscribers[msg.sender], "Already subscribed");
 
@@ -116,10 +115,6 @@ contract BotRegistry is Ownable, ReentrancyGuard {
             // Calculate base credits from months elapsed
             uint256 baseCredits = CREDITS_PER_MONTH;
 
-            // Calculate bonus credits based on stake amount
-            // uint256 stakeMultiplier = stakingBalance[user] / MIN_STAKE_AMOUNT;
-            // uint256 bonusCredits = (baseCredits * stakeMultiplier) / 10; // 10% bonus per MIN_STAKE_AMOUNT
-
             uint256 totalNewCredits = baseCredits;
 
             // Update state
@@ -147,19 +142,4 @@ contract BotRegistry is Ownable, ReentrancyGuard {
     function getTotalSubscribers() external view returns (uint256) {
         return totalSubscribers;
     }
-    // function updateMetadata(
-    //     string memory _name,
-    //     string memory _apiInfo,
-    //     uint8 _version,
-    //     uint256 _fee
-    // ) external onlyCreator {
-    //     require(_fee > 0, "Fee must be positive");
-
-    //     metadata.name = _name;
-    //     metadata.apiInfo = _apiInfo;
-    //     metadata.version = _version;
-    //     metadata.fee = _fee;
-
-    //     emit MetadataUpdated(_name, _apiInfo, _version, _fee);
-    // }
 }

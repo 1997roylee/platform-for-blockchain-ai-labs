@@ -1,6 +1,4 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
-// import { uploadToIPFS } from "./ipfs_upload";
-// import OptionModule from "../ignition/modules/CallOption";
 import BotFactoryModule from "../ignition/modules/BotFactory";
 
 async function main() {

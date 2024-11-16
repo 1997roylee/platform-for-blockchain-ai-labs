@@ -1,9 +1,7 @@
 "use server";
 
 import { auth } from "@/lib/auth";
-import prisma from "@/lib/prisma";
 import { getWallet } from "@/lib/server/wallet";
-import { Message } from "@/stores/chat";
 import { Coinbase } from "@coinbase/coinbase-sdk";
 
 export async function subscribeBot(botId: string) {
@@ -37,7 +35,7 @@ export async function subscribeBot(botId: string) {
       contractAddress: botId,
       method: "subscribe",
       args: {},
-      amount: 0.01,
+      amount: 0.001,
       assetId: Coinbase.assets.Eth,
       abi,
     });
@@ -50,50 +48,50 @@ export async function subscribeBot(botId: string) {
   return { success: true };
 }
 
-export async function saveThreadMessages(
-  threadId: string,
-  agentId: string,
-  messages: Message[],
-) {
-  const session = await auth();
+// export async function saveThreadMessages(
+//   threadId: string,
+//   agentId: string,
+//   messages: Message[],
+// ) {
+//   const session = await auth();
 
-  if (!session?.user) {
-    throw new Error("Unauthorized");
-  }
+//   if (!session?.user) {
+//     throw new Error("Unauthorized");
+//   }
 
-  await prisma.thread.upsert({
-    where: {
-      id: threadId,
-    },
-    update: {
-      messages: {
-        createMany: {
-          data: messages.map((message) => ({
-            content: message.text,
-            role: message.role.toUpperCase(),
-            // threadId,
-            // userId: session.user!.id!,
-          })),
-        },
-      },
-    },
-    create: {
-      agentId,
-      userId: session.user.id!,
-      messages: {
-        createMany: {
-          data: messages.map((message) => ({
-            content: message.text,
-            role: message.role.toUpperCase(),
-            // threadId,
-            // userId: session.user!.id!,
-          })),
-        },
-      },
-    },
-  });
-  return { success: true };
-}
+//   await prisma.thread.upsert({
+//     where: {
+//       id: threadId,
+//     },
+//     update: {
+//       messages: {
+//         createMany: {
+//           data: messages.map((message) => ({
+//             content: message.text,
+//             role: message.role.toUpperCase(),
+//             // threadId,
+//             // userId: session.user!.id!,
+//           })),
+//         },
+//       },
+//     },
+//     create: {
+//       agentId,
+//       userId: session.user.id!,
+//       messages: {
+//         createMany: {
+//           data: messages.map((message) => ({
+//             content: message.text,
+//             role: message.role.toUpperCase(),
+//             // threadId,
+//             // userId: session.user!.id!,
+//           })),
+//         },
+//       },
+//     },
+//   });
+//   return { success: true };
+// }
 
 export async function spendCredit(botId: string) {
   const session = await auth();

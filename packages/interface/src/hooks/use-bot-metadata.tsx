@@ -48,9 +48,9 @@ export type Bot = {
   name: string;
   description: string;
   icon: string;
-  apiEndpoint: string;
+  agentId: string;
   creator: Address;
-  credits: BigInt;
+  credits: bigint;
 };
 
 export default function useBotMetadata(address: Address) {
@@ -67,7 +67,7 @@ export default function useBotMetadata(address: Address) {
       name: data?.[0],
       description: data?.[1],
       icon: data?.[2],
-      apiEndpoint: data?.[3],
+      agentId: data?.[3],
       credits: data?.[4],
       creator: data?.[5],
     } as Bot;

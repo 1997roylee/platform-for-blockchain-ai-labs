@@ -2,9 +2,9 @@
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
+  // SheetDescription,
+  // SheetHeader,
+  // SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "./ui/button";
@@ -55,7 +55,7 @@ export default function AccountSheet({
             </Button>
           </div>
           <div className="">
-            Balance: {isPending ? 0 : balance?.formatted} ETH
+            Balance: {isPending ? 0 : Number(balance?.formatted).toFixed(6)} ETH
           </div>
 
           <div className="flex-1"></div>

@@ -1,16 +1,21 @@
-version: '3.8'
+version: "3.7"
 services:
   postgres:
-    image: postgres:13
-    restart: always
+    image: postgres:14
+    restart: unless-stopped
+    # Uncomment the following line to enable query logging
+    # Then restart the container.
+    # command: ['postgres', '-c', 'log_statement=all']
     environment:
-      POSTGRES_USER: prisma
-      POSTGRES_PASSWORD: prisma
-      POSTGRES_DB: mydb
+      - POSTGRES_DB=tests
+      - POSTGRES_USER=prisma
+      - POSTGRES_PASSWORD=prisma
     ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-volumes:
-  postgres_data:
+      - '15432:5432'
+    healthcheck:
+      # specifying user and database is needed to avoid `FATAL:  role "root" does not exist`
+      # spam in the logs
+      test: ['CMD', 'pg_isready', '-U', 'prisma', '-d', 'tests']
+      interval: 5s
+      timeout: 2s
+      retries: 20

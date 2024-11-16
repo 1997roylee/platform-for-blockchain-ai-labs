@@ -6,7 +6,7 @@
   "scripts": {
     "deploy:localhost": "npx hardhat run scripts/deploy.ts --network localhost",
     "deploy:base": "npx hardhat run scripts/deploy.ts --network baseSepolia",
-    "create:bot": "npx hardhat run ./scripts/create-bot.ts --network localhost",
+    "create:bots": "npx hardhat run scripts/create-bots.ts --network baseSepolia",
     "generate:types": "npx hardhat typechain",
     "generate:account": "tsx ./scripts/generate-account.ts",
     "test": "npx hardhat test",

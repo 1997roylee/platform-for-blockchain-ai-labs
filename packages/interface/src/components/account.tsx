@@ -28,13 +28,13 @@ export default function Account() {
   console.log("wallet", data);
 
   useEffect(() => {
-    console.log(data);
     if (data) {
       setWallet({
         id: data.id,
         address: data.primaryAddress,
       });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   if (session?.user && wallet?.id) {
@@ -45,7 +45,9 @@ export default function Account() {
     );
   }
 
-  if (isPending || !data)
+
+  // console.log("data", data)
+  if (isPending)
     return (
       <div>
         <Skeleton className="w-24 h-12" />

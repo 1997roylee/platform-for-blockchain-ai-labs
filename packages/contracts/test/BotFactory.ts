@@ -12,7 +12,7 @@ describe("BotFactory", function () {
   const mockBot = {
     name: "TestBot",
     description: "A test bot",
-    apiEndpoint: "http://localhost:3000/api/bot",
+    agentId: "demo",
     icon: "https://qph.cf2.poecdn.net/main-thumb-pb-3002-200-vcmrcgoloaktppabmdfsgeczaixswmxt.jpeg",
     // version: BigInt(1),
     credits: BigInt(30),
@@ -38,7 +38,7 @@ describe("BotFactory", function () {
         mockBot.name,
         mockBot.description,
         mockBot.icon,
-        mockBot.apiEndpoint,
+        mockBot.agentId,
         mockBot.credits
       );
 
@@ -74,7 +74,7 @@ describe("BotFactory", function () {
         mockBot.name,
         mockBot.description,
         mockBot.icon,
-        mockBot.apiEndpoint,
+        mockBot.agentId,
         mockBot.credits
       );
 
@@ -87,7 +87,7 @@ describe("BotFactory", function () {
         mockBot.name,
         mockBot.description,
         mockBot.icon,
-        mockBot.apiEndpoint,
+        mockBot.agentId,
         mockBot.credits
       );
 
@@ -105,7 +105,7 @@ describe("BotFactory", function () {
       const metadata = await registry.metadata();
       expect(metadata.name).to.equal(mockBot.name);
       expect(metadata.icon).to.equal(mockBot.icon);
-      expect(metadata.apiEndpoint).to.equal(mockBot.apiEndpoint);
+      expect(metadata.agentId).to.equal(mockBot.agentId);
       expect(metadata.credits).to.equal(mockBot.credits);
       expect(metadata.description).to.equal(mockBot.description);
       expect(metadata.creator).to.equal(owner.address);

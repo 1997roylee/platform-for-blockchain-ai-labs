@@ -18,7 +18,7 @@ export default function AccountBalance({ address }: { address: string }) {
     <div className="flex gap-3 items-center cursor-pointer hover:bg-gray-50 rounded-full py-1 px-3">
       <div className="text-right">
         <div>{address ? formatWalletAddress(address) : null}</div>
-        <div>{isPending ? 0 : balance?.formatted} ETH</div>
+        <div>{isPending ? 0 : Number(balance?.formatted).toFixed(6)} ETH</div>
       </div>
       <Avatar name={address} variant="beam" size={48} />
     </div>
