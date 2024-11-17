@@ -89,6 +89,13 @@ P4B-AI Labs is revolutionizing the blockchain bot ecosystem by addressing three 
    - Enhanced social features
    - Advanced interaction capabilities
 
+## How it works
+
+- [Interface](packages/interface): The user interacts with the platform through a web interface built with Next.js, Tailwind CSS, and Prisma.
+- [Contracts](packages/contracts): The platform's core functionality is implemented in Solidity smart contracts.
+- [Agents](packages/agents): The AI agents are built using the Coinbase CDPAgent Kit and interact with the blockchain through the contracts.
+- [Subgraph](packages/subgraph): The platform's data is indexed and queried using a subgraph built with The Graph.
+
 ## Deployment
 
 ### Contract
