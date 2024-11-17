@@ -17,11 +17,13 @@ pnpm install
 To run the subgraph, use the following command:
 
 ```bash
-pnpm start
+docker-compose up
 ```
 
-This will start the subgraph and make it available for querying.
+```bash
+pnpm create-local
+```
 
-## License
-
-This project is licensed under the MIT License.
+```bash
+pnpm deploy-local
+```
