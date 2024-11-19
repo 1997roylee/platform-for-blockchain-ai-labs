@@ -1,4 +1,4 @@
-## P4B-AI Labs
+## ETH Global Bangkok 2024 Project - P4B-AI Labs
 
 P4B-AI Labs is revolutionizing the blockchain bot ecosystem by addressing three critical market gaps:
 
@@ -109,5 +109,8 @@ P4B-AI Labs is revolutionizing the blockchain bot ecosystem by addressing three 
 ### Subgraph
 
 - **API Endpoint:** `https://api.studio.thegraph.com/query/25032/ethglobal/version/latest`
+
+### Link
+Link to ETH Global Project showcase: https://ethglobal.com/showcase/p4b-ai-labs-992i3
 
 ![Preview](resources/preview.jpg)
